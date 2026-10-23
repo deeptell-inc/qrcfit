@@ -7,12 +7,15 @@ license: MIT
 authors:
   - family-names: Wakaura
     given-names: Hikaru
-    affiliation: "QIRI (Quantum Integrated Research Institute Inc.), Tokyo, Japan"
+    email: h.wakaura@qiri.co.jp
+    affiliation: "QIRI (Quantum Integrated Research Institute Inc.), Tokyo 107-0061, Japan"
 preferred-citation:
   type: article
   title: "A resource map of quantum reservoir computing: where it beats tuned classical baselines"
   authors:
     - family-names: Wakaura
       given-names: Hikaru
+      email: h.wakaura@qiri.co.jp
+      affiliation: "QIRI (Quantum Integrated Research Institute Inc.), Tokyo 107-0061, Japan"
   year: 2026
   journal: "manuscript"
