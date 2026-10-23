@@ -319,7 +319,7 @@ if not HAVE_FORR:
             numbers[k] = v
 
 if HAVE_FORR:
-    fig, axes = plt.subplots(1, 3, figsize=(DOUBLE, 2.5), gridspec_kw=dict(wspace=0.36, left=0.065, right=0.99, top=0.9, bottom=0.2))
+    fig, axes = plt.subplots(1, 4, figsize=(DOUBLE, 2.3), gridspec_kw=dict(wspace=0.42, left=0.075, right=0.995, top=0.9, bottom=0.21))
     QS = [20, 200, 2000, 20000]
     NCOL = {10: "#c6dbef", 12: "#6baed6", 14: "#2171b5", 16: "#08306b"}
     forr_stats = {}
@@ -338,12 +338,12 @@ if HAVE_FORR:
         return float(np.median([v[name]["nmse"] for k, v in base.items() if k.startswith(task + "|") and name in v]))
 
 
-    for ax, fam, title in [(axes[0], "kloos", "Kloosterman pairs (non-quadratic phase)"), (axes[1], "gold", "Gold pairs (quadratic phase)")]:
+    for ax, fam, title in [(axes[0], "rand", "Fresh random pairs"), (axes[1], "kloos", "Kloosterman (fixed public $f$)"), (axes[2], "gold", "Gold (quadratic phase)")]:
         fam_n = [n for n in FORR_N if f"forr_{fam}_n{n}|0" in base]
         for n in fam_n:
             t = f"forr_{fam}_n{n}"
             qm = [q_med(t, k) for k in ["1e+02", "1e+03", "1e+04"]]
-            ax.plot([200, 2000, 20000], qm, "-o", ms=3.5, color=NCOL[n], label=f"quantum, $n={n}$" if fam == "kloos" or n == max(fam_n) else None, zorder=4)
+            ax.plot([200, 2000, 20000], qm, "-o", ms=3.5, color=NCOL[n], label=f"quantum, $n={n}$" if fam == "rand" or n == max(fam_n) else None, zorder=4)
             opt = [b_med(t, f"{SQRTN_KEY}:{Q}") for Q in QS]; nai = [b_med(t, f"forr_naive:{Q}") for Q in QS]
             ax.plot(QS, opt, "--s", ms=3, color=NCOL[n], mfc="none", label=f"classical $\\sqrt{{N}}$ all-pairs, $n={n}$" if n == max(fam_n) else None)
             ax.plot(QS, nai, ":", color=NCOL[n], lw=0.8, label="classical naive sampling" if n == max(fam_n) else None)
@@ -357,12 +357,12 @@ if HAVE_FORR:
             ax.plot([Qa], [anf], marker="*", ms=7, color=NCOL[n], mec="k", mew=0.4, ls="none", label="classical degree-2 ANF attack" if n == max(fam_n) else None, zorder=5)
             forr_stats[t] = dict(N=1 << n, quantum_m1e2_1e3_1e4=[float(f"{v:.3g}") for v in qm], quantum_exact=float(f"{q_med(t, 'inf'):.3g}"),
                                  sqrtN_estimator=SQRTN_KEY, sqrtN_Q20_200_2000_20000=[float(f"{v:.3g}") for v in opt], naive_Q20_200_2000_20000=[float(f"{v:.3g}") for v in nai], anf2=dict(Q=Qa, nmse=float(f"{anf:.3g}")))
-        ax.set_xscale("log"); ax.set_yscale("log"); ax.set_xlim(12, 4e4); ax.set_ylim(2e-4, 2)
-        ax.set_xlabel("oracle queries per step"); ax.set_title(title, fontsize=8)
+        ax.set_xscale("log"); ax.set_yscale("log"); ax.set_xlim(12, 4e4); ax.set_ylim(1e-4, 2)
+        ax.set_xlabel("oracle queries per step"); ax.set_title(title, fontsize=7.5)
     axes[0].set_ylabel("NMSE (mean of 3 targets)")
-    axes[0].legend(frameon=False, loc="lower left", handletextpad=0.2, borderpad=0.2, fontsize=5.5)
-    axes[1].legend(frameon=False, loc="lower left", handletextpad=0.2, borderpad=0.2, fontsize=5.5)
-    ax = axes[2]
+    for a_ in axes[:3]:
+        a_.legend(frameon=False, loc="lower left", handletextpad=0.2, borderpad=0.2, fontsize=5)
+    ax = axes[3]
     for n, col in [(12, "#6baed6"), (16, "#08306b")]:
         t = f"drift_kloos_n{n}"
         qm = [q_med(t, k) for k in ["1e+02", "1e+03", "1e+04"]]
@@ -373,11 +373,11 @@ if HAVE_FORR:
         ax.plot(QS, wb, "-.^", ms=3, color=col, mfc="w", label=f"white-box (knows ideal $g$), $n={n}$")
         forr_stats[t] = dict(N=1 << n, quantum_m1e2_1e3_1e4=[float(f"{v:.3g}") for v in qm], quantum_exact=float(f"{q_med(t, 'inf'):.3g}"),
                              sqrtN_estimator=SQRTN_KEY, sqrtN_Q20_200_2000_20000=[float(f"{v:.3g}") for v in opt], naive_Q20_200_2000_20000=[float(f"{v:.3g}") for v in nai], whitebox_Q20_200_2000_20000=[float(f"{v:.3g}") for v in wb])
-    ax.set_xscale("log"); ax.set_yscale("log"); ax.set_xlim(12, 4e4); ax.set_ylim(2e-4, 2)
-    ax.set_xlabel("oracle queries per step"); ax.set_ylabel("NMSE (mean of 2 targets)"); ax.set_title("Dual-relation drift monitoring", fontsize=8)
-    ax.legend(frameon=False, loc="lower left", handletextpad=0.2, borderpad=0.2, fontsize=5.5)
-    for ax, p in zip(axes, "abc"):
-        ax.text(-0.2, 1.04, f"({p})", transform=ax.transAxes, fontsize=9, fontweight="bold")
+    ax.set_xscale("log"); ax.set_yscale("log"); ax.set_xlim(12, 4e4); ax.set_ylim(1e-4, 2)
+    ax.set_xlabel("oracle queries per step"); ax.set_ylabel("NMSE (mean of 2 targets)"); ax.set_title("Drift monitoring (fixed $f$)", fontsize=8)
+    ax.legend(frameon=False, loc="lower left", handletextpad=0.2, borderpad=0.2, fontsize=5)
+    for ax, p in zip(axes, "abcd"):
+        ax.text(-0.3, 1.05, f"({p})", transform=ax.transAxes, fontsize=9, fontweight="bold")
     fig.savefig(os.path.join(OUT, "fig4_forrelation.pdf"))
     plt.close(fig)
     for t in orc_tasks:
