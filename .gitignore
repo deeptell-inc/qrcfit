@@ -15,3 +15,5 @@ paper/bibtex.log
 paper/mainNotes.bib
 .DS_Store
 paper/
+dist/
+submission.json
