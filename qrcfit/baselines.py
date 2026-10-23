@@ -114,12 +114,12 @@ def all_baselines(task, seed, budget=20, quick=False):
         N = 1 << task["n"]
         nm, name = readout_best(task["u"], task, seed)
         out[f"forr_full:{N}"] = dict(nmse=nm, F=int(name.split(":")[1].split(",")[0].strip("()")) if name else 0, family="forr_full", size=N, readout=name)
-        variants = ("naive", "pairs", "wb") if "flips" in task else ("naive", "pairs")
+        variants = ("naive", "pairs", "wb") if "flips" in task else ("naive", "pairs")  # fresh-pair tasks: black-box only
         for variant in variants:
             for Q in FORR_Q:
                 nm, name = readout_best(forr_classical_stream(task, variant, Q, seed), task, seed)
                 out[f"forr_{variant}:{Q}"] = dict(nmse=nm, F=int(name.split(":")[1].split(",")[0].strip("()")) if name else 0, family=f"forr_{variant}", size=Q, readout=name)
-        if "flips" not in task:
+        if "flips" not in task:  # ANF attack applies to fixed- and fresh-pair tasks alike (fails on both non-quadratic families)
             Q = anf2_queries(task["n"])
             nm, name = readout_best(forr_classical_stream(task, "anf2", Q, seed), task, seed)
             out[f"forr_anf2:{Q}"] = dict(nmse=nm, F=0, family="forr_anf2", size=Q, readout=name)

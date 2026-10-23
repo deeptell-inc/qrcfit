@@ -127,3 +127,18 @@ def test_pairs_estimator_is_unbiased_and_sqrtN_efficient():
     assert abs(err.mean()) < 0.05 and err.std() < 0.2
     naive = classical_estimates(tk, "naive", 2000, rng) - tk["phi"]
     assert naive.std() > 3 * err.std()                   # naive variance N/Q ≈ 2 ≫ pairs
+
+
+def test_fresh_random_forrelation_stream():
+    from qrcfit.tasks import forrelation_random_stream
+    from qrcfit.forrelation import classical_estimates, fresh_pair, phi_all_translations
+    t = forrelation_random_stream(10, T_train=60, T_test=30)
+    yes = t["e"][:len(t["phi"])] == 0
+    assert 0.7 < np.median(t["phi"][yes]) < 0.9 and np.abs(t["phi"][~yes]).max() < 0.3
+    f0, g0 = fresh_pair(t, 0); f1, g1 = fresh_pair(t, 1)
+    assert not np.array_equal(f0, f1)                       # fresh pair every step
+    assert abs(phi_all_translations(f0, g0)[0] - t["phi"][0]) < 1e-9
+    rng = np.random.default_rng(0)
+    assert np.isnan(classical_estimates(t, "wb", 200, rng)).all()
+    est = classical_estimates(t, "pairs", 2000, rng)
+    assert np.isfinite(est).all() and abs(np.mean(est - t["phi"])) < 0.1

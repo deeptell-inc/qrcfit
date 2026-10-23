@@ -146,6 +146,14 @@ def drift_stream(n=16, T_train=1000, T_test=500, seed=0):
     return out
 
 
+def fresh_pair(task, t):
+    """(f_t, g_t) tables of a forr_rand task step, regenerated from the per-step seed (no persistence)."""
+    N = 1 << task["n"]
+    f = 1.0 - 2.0 * np.random.default_rng(int(task["fseed"][t])).integers(0, 2, N)
+    g = np.where(fwht(f) >= 0, 1.0, -1.0)
+    return f, g[np.arange(N) ^ int(task["e"][t])]
+
+
 def classical_estimates(task, variant, Q, rng):
     """Per-step classical estimate of Phi_t from Q oracle queries per step.
     'naive': Phi_hat = sqrt(N) * mean_{i<=Q} f_t(x_i) (-1)^{x_i.y_i} g_t(y_i), unbiased, variance ~ N/Q.
@@ -154,11 +162,37 @@ def classical_estimates(task, variant, Q, rng):
              (-1)^{x.y} matrix is a bit-matmul, no extra queries). Var(Phi_hat) ≈ 4/Q + 4N/Q^2, so constant
              precision needs Q = Θ(sqrt(N)) queries.
     'opt'  : deprecated optimistic surrogate Phi + N(0, sqrt(N)/Q) (kept for reference only, not reported).
+    'knownf': WHITE-BOX: f public (one FWHT, no queries); n+1 queries recover c_t, the rest importance-sample
+             g_t at z ~ |f_hat(z)|. Unbiased, variance <= A^2/K, independent of N.
     'anf2' : learn degree-<=2 ANFs of f_t and g_t with anf2_queries(n) queries, verify on ANF2_EXTRA random
              points, and if both verify compute Phi_t exactly from the reconstructed tables (the §4
              dequantisation of quadratic phases); otherwise fall back to 'naive' with the same Q."""
-    f, g, n, phi = task["f"], task["g"], task["n"], task["phi"]
+    n, phi = task["n"], task["phi"]
     N = 1 << n; T = len(phi)
+    if "fseed" in task:  # fresh random pair per step: only black-box estimators apply
+        if variant not in ("naive", "pairs", "anf2"):
+            return np.full(T, np.nan)
+        out = np.zeros(T)
+        for t in range(T):
+            ft, gt = fresh_pair(task, t)
+            if variant == "anf2":
+                ok = True; tabs = []
+                for tab_q in (ft, gt):
+                    coef = anf2_learn(tab_q, n); tab = anf2_reconstruct(coef, n)
+                    xs = rng.integers(0, N, ANF2_EXTRA)
+                    if not np.array_equal(tab[xs], tab_q[xs]):
+                        ok = False; break
+                    tabs.append(tab)
+                if ok:
+                    out[t] = float(np.dot(tabs[1], fwht(tabs[0])) / N ** 1.5); continue
+            if variant == "pairs":
+                xs = rng.integers(0, N, Q // 2); ys = rng.integers(0, N, Q - Q // 2)
+                sp = np.zeros(N); np.add.at(sp, xs, ft[xs])
+                out[t] = np.sqrt(N) * float(np.dot(gt[ys], fwht(sp)[ys])) / (len(xs) * len(ys)); continue
+            xs = rng.integers(0, N, Q); ys = rng.integers(0, N, Q)
+            out[t] = np.sqrt(N) * np.mean(ft[xs] * (1 - 2 * _parity(xs & ys)) * gt[ys])
+        return out
+    f, g = task["f"], task["g"]
     if variant == "opt":
         return phi + rng.standard_normal(T) * np.sqrt(np.sqrt(N) / Q)
     bits = np.arange(n)
@@ -184,6 +218,18 @@ def classical_estimates(task, variant, Q, rng):
         return out
     c, e = task["c"], task["e"]
     out = np.zeros(T)
+    if variant == "knownf":
+        # WHITE-BOX estimator: the base function f is public, so f_hat (hence g = sign f_hat) costs no queries
+        # (one FWHT per task). Per step: n+1 queries of f_t at 0 and the basis vectors recover c_t exactly
+        # (f_t(e_i) f(e_i) = (-1)^{c_i}); the remaining K = Q-(n+1) queries sample z ~ |f_hat(z)| and read
+        # g_t(z ^ c_t) = g(z ^ e_t). Phi_hat = A * mean(sign f_hat(z) g_t(z ^ c_t)), A = sum|f_hat| / N^{3/2},
+        # is unbiased with variance <= A^2 / K (exact on YES steps). Proposed by the adversarial review panel.
+        fh = fwht(f); A = float(np.abs(fh).sum() / N ** 1.5); prob = np.abs(fh) / np.abs(fh).sum(); sgn = np.sign(fh)
+        K = max(1, Q - (n + 1))
+        for t in range(T):
+            zs = rng.choice(N, K, p=prob)
+            out[t] = A * np.mean(sgn[zs] * g[zs ^ int(e[t])])  # g_t(z ^ c_t) = g(z ^ c_t ^ c_t ^ e_t)
+        return out
     for t in range(T):
         ft = lambda x: f[x] * (1 - 2 * int(_parity(int(x) & int(c[t]))))             # chi_c . f
         gt = lambda y: g[int(y) ^ int(c[t]) ^ int(e[t])]                            # g o tau_{c+e}

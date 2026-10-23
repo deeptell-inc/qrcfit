@@ -74,7 +74,7 @@ for r in rows:
 
 
 def W_of(cfg):
-    return 1 if ("weak" in cfg or cfg.startswith("forr")) else 30
+    return 1 if (("weak" in cfg and "weakT" not in cfg) or cfg.startswith("forr")) else 30  # weakT = weak T1/T2 relaxation (Hamiltonian encoding), not weak measurement
 
 
 agg = {}
@@ -85,7 +85,11 @@ for (c, t), ds in cells.items():
              A=all(d["A"] for d in ds), a=all(d["a"] for d in ds), n=len(ds))
     kb = "1e+04" if W == 30 else "1e+05"  # S at the 3e5 shot-ops budget
     a["q_budget"] = float(np.median([d["curve"][kb] for d in ds]))
-    a["scale"] = a["a"] and a["S_eq"] * W <= BUDGET and (np.isinf(a["M"]) or a["M"] / a["Fq"] >= 10)
+    a["scale_generic"] = a["a"] and a["S_eq"] * W <= BUDGET and (np.isinf(a["M"]) or a["M"] / a["Fq"] >= 10)  # make_report.py rule
+    # On oracle tasks a/eqW/M* are undefined: the ANF stream is stored with F=0, no ESN family is run, and the quantum
+    # stream's tuned readout is not charged (adversarial panel, manuscript-REVIEW.md); ★ is therefore reported only on
+    # classical-input tasks, and oracle tasks use the query-matched criterion ✚.
+    a["scale"] = a["scale_generic"] and not (t.startswith("forr") or t.startswith("drift"))
     a["both"] = a["A"] and a["S_cls"] * W <= BUDGET
     agg[(c, t)] = a
 
@@ -106,8 +110,9 @@ note("n_tasks_oracle", len(orc_tasks), "results/map.jsonl")
 note("A_wins", sum(a["A"] for a in agg.values()), "results/map.md 'Wins by axis'")
 note("a_wins", sum(a["a"] for a in agg.values()), "results/map.md 'Wins by axis'")
 note("a_wins_classical_input", sum(agg[k]["a"] for k in cls_pairs), "results/map.jsonl")
-note("star_wins", sum(a["scale"] for a in agg.values()), "results/map.md 'Wins by axis'")
-note("star_cells", sorted(f"{c}|{t}" for (c, t), a in agg.items() if a["scale"]), "results/map.md")
+note("star_wins", sum(a["scale"] for a in agg.values()), "★ restricted to classical-input tasks (manuscript-REVIEW.md fix 3)")
+note("star_wins_generic_rule", sum(a["scale_generic"] for a in agg.values()), "results/map.md 'Wins by axis' (make_report.py generic rule, counts the 6 oracle cells)")
+note("star_cells_generic_rule", sorted(f"{c}|{t}" for (c, t), a in agg.items() if a["scale_generic"]), "results/map.md")
 note("both_wins", sum(a["both"] for a in agg.values()), "results/map.md 'Wins by axis'")
 rat = [np.log10(agg[k]["q"] / agg[k]["cls"]) for k in cls_pairs]
 note("median_log10_q_over_cls_classical_input", round(float(np.median(rat)), 2), "results/map.jsonl + baselines.json")
@@ -203,10 +208,10 @@ def family(c):
         return "CV Kerr ($x,p,n$)"
     if c.startswith("cv_gauss"):
         return "CV Gaussian cov."
+    if "hamenc" in c:
+        return "spin Hou $xyz$"  # includes the *_weakT variants (weak T1/T2 relaxation), which are projective readouts
     if "weak" in c:
         return "spin online weak"
-    if "hamenc" in c:
-        return "spin Hou $xyz$"
     if "zz" in c:
         return "spin $z{+}zz$"
     return "spin $z$"
@@ -342,6 +347,12 @@ if HAVE_FORR:
             opt = [b_med(t, f"{SQRTN_KEY}:{Q}") for Q in QS]; nai = [b_med(t, f"forr_naive:{Q}") for Q in QS]
             ax.plot(QS, opt, "--s", ms=3, color=NCOL[n], mfc="none", label=f"classical $\\sqrt{{N}}$ all-pairs, $n={n}$" if n == max(fam_n) else None)
             ax.plot(QS, nai, ":", color=NCOL[n], lw=0.8, label="classical naive sampling" if n == max(fam_n) else None)
+            kf_path = os.path.join(RES, "forr_knownf.json")
+            if os.path.exists(kf_path):
+                kf = json.load(open(kf_path)); ks = [k for k in kf if k.startswith(t + "|")]
+                if ks:
+                    kfm = [float(np.median([kf[k][f"forr_knownf:{Q}"]["nmse"] for k in ks])) for Q in QS]
+                    ax.plot(QS, kfm, "-x", ms=4, color=NCOL[n], lw=0.8, label="classical, $f$ public (known-$f$)" if n == max(fam_n) else None, zorder=4)
             Qa = anf2_queries(n); anf = b_med(t, f"forr_anf2:{Qa}")
             ax.plot([Qa], [anf], marker="*", ms=7, color=NCOL[n], mec="k", mew=0.4, ls="none", label="classical degree-2 ANF attack" if n == max(fam_n) else None, zorder=5)
             forr_stats[t] = dict(N=1 << n, quantum_m1e2_1e3_1e4=[float(f"{v:.3g}") for v in qm], quantum_exact=float(f"{q_med(t, 'inf'):.3g}"),
@@ -474,3 +485,79 @@ axis["qkerr_tuned_D100_best_quantum_tasks"] = {t: cell("qkerr_delay_D100_tuned",
 note("axis_effects", axis, "results/map.jsonl + results/baselines.json (medians over 3 seeds; axis medians = median over the 23 classical-input tasks of log10 q/cls)")
 json.dump(numbers, open(os.path.join(OUT, "numbers.json"), "w"), indent=1, default=float)
 print(json.dumps(axis, indent=1, default=str))
+
+# ------------------------------------------------------------------ numbers added after the adversarial review panel (paper/manuscript-REVIEW.md)
+rev = {}
+# (i) best quantum configuration per task: median over tasks of log10(q_best/cls) (the 2.6-decade figure is the all-pairs median)
+rev["best_per_task_median_log10_q_over_cls"] = dict(median=round(float(np.median([np.log10(bestq[t]["q"] / bestq[t]["cls"]) for t in cls_tasks])), 2),
+                                                    iqr=[round(float(np.percentile([np.log10(bestq[t]["q"] / bestq[t]["cls"]) for t in cls_tasks], p)), 2) for p in (25, 75)])
+# (ii) S*_eq distribution of the a-wins (classical input) and how many are matched by an ESN of <= 30 / 100 nodes
+aw = [k for k in cls_pairs if agg[k]["a"]]
+Sd = defaultdict(int)
+for k in aw:
+    S = agg[k]["S_eq"]; Sd["exact_only" if S >= 1e7 else f"{S:.0e}"] += 1
+rev["a_wins_S_eq_distribution"] = dict(Sd)
+rev["a_wins_q_gt_0.5"] = int(sum(agg[k]["q"] > 0.5 for k in aw)); rev["a_wins_ratio_lt_1.1"] = int(sum(agg[k]["eqW"] / agg[k]["q"] < 1.1 for k in aw))
+# (iii) task counts
+rev["task_counts"] = dict(classical_time_series=len([t for t in cls_tasks if not t.startswith("qin")]), quantum_input=len([t for t in cls_tasks if t.startswith("qin")]), oracle=len(orc_tasks))
+# (iv) tuned Kerr: IQR width / median and per-seed wins of tuned quantum over tuned semiclassical
+tk = {}
+for tn in TASKS_T:
+    for D in ("D30", "D100"):
+        recs = [v for k, v in tune.items() if k.startswith(f"{tn}|{D}|")]
+        q = np.array([r["q_test"] for r in recs]); kd = np.array([r["kd_same_D"] for r in recs])
+        tk[f"{tn}|{D}"] = dict(n_seeds=len(recs), iqr_over_median_quantum=round(float((np.percentile(q, 75) - np.percentile(q, 25)) / np.median(q)), 2),
+                               iqr_over_median_semiclassical=round(float((np.percentile(kd, 75) - np.percentile(kd, 25)) / np.median(kd)), 2),
+                               seeds_quantum_better=int(np.sum(q < kd)))
+rev["tune_qkerr_spread"] = tk
+# (v) mean photon number in the twin runs (median and max over seeds, per configuration, eps0=0.5 configs)
+mx = defaultdict(list)
+for k, v in twin.items():
+    mx[k.split("|")[1]].append(v["maxn"])
+rev["kerr_twin_maxn_by_config"] = {c: dict(median=round(float(np.median(v)), 2), max=round(float(max(v)), 2)) for c, v in mx.items()}
+# (vi) per-seed oracle comparisons: quantum at m vs best black-box classical with <= 20m queries (same rule as ✚), per n
+if HAVE_FORR:
+    ps = {}
+    for t in orc_tasks:
+        rs = [r for r in rows if r["config"] == "forr_qrc" and r["task"] == t]
+        d = {}
+        for m in (1e2, 1e3):
+            wins = 0; ratios = []
+            for r in rs:
+                b = base[f"{t}|{r['seed']}"]
+                rivals = [v["nmse"] for k, v in b.items() if k.startswith("forr_") and not k.startswith(("forr_wb", "forr_full", "forr_knownf")) and v["size"] <= 20 * m]
+                best_r = min(rivals); qm = r["curve"][f"{m:.0e}"]
+                wins += qm < best_r; ratios.append(qm / best_r)
+            d[f"m{m:.0e}"] = dict(seeds_quantum_better=wins, of=len(rs), median_quantum_over_best_classical=round(float(np.median(ratios)), 3))
+        ps[t] = d
+    rev["per_seed_query_comparison"] = ps
+    # (vii) known-f (white-box) estimator, results/forr_knownf.json, if present
+    kf_path = os.path.join(RES, "forr_knownf.json")
+    if os.path.exists(kf_path):
+        kf = json.load(open(kf_path)); kfs = {}
+        for t in orc_tasks:
+            keys = [k for k in kf if k.startswith(t + "|")]
+            if not keys:
+                continue
+            seeds = [int(k.split("|")[1]) for k in keys]
+            med = {Q: round(float(np.median([kf[f"{t}|{s}"][f"forr_knownf:{Q}"]["nmse"] for s in seeds])), 5) for Q in QS}
+            qrows = {r["seed"]: r for r in rows if r["config"] == "forr_qrc" and r["task"] == t}
+            win200 = int(sum(kf[f"{t}|{s}"]["forr_knownf:200"]["nmse"] < qrows[s]["curve"]["1e+02"] for s in seeds if s in qrows))
+            win200_vs_m1e3 = int(sum(kf[f"{t}|{s}"]["forr_knownf:200"]["nmse"] < qrows[s]["curve"]["1e+03"] for s in seeds if s in qrows))
+            kfs[t] = dict(n_seeds=len(seeds), knownf_Q20_200_2000_20000=[med[Q] for Q in QS], seeds_knownf200_beats_quantum_m1e2=win200, seeds_knownf200_beats_quantum_m1e3=win200_vs_m1e3)
+        rev["knownf"] = kfs
+# (viii) tuned mean-field twin, results/tune_meanfield.json, if present
+mf_path = os.path.join(RES, "tune_meanfield.json")
+if os.path.exists(mf_path):
+    mf = json.load(open(mf_path)); mfs = {}
+    for tn in TASKS_T:
+        for D in (30, 100):
+            recs = [v for k, v in mf.items() if k.startswith(f"{tn}|D{D}|") and v["mf_test"] is not None]
+            if recs:
+                m_ = np.array([r["mf_test"] for r in recs]); q_ = np.array([r["q_test"] for r in recs])
+                mfs[f"{tn}|D{D}"] = dict(n_seeds=len(recs), tuned_meanfield=float(f"{np.median(m_):.3g}"), tuned_quantum=float(f"{np.median(q_):.3g}"), ratio_q_over_mf=float(f"{np.median(q_) / np.median(m_):.3g}"), seeds_quantum_better=int(np.sum(q_ < m_)))
+    rev["tune_meanfield"] = mfs
+# (ix) shot-wall family statistics after the weakT reclassification are already in shot_degradation_* (family() fixed)
+note("review_numbers", rev, "recomputed after the adversarial panel; sources: results/map.jsonl, baselines.json, tune_qkerr.json, kerr_twin.json, forr_knownf.json, tune_meanfield.json")
+json.dump(numbers, open(os.path.join(OUT, "numbers.json"), "w"), indent=1, default=float)
+print(json.dumps(rev, indent=1, default=str)[:6000])

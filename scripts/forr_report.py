@@ -23,7 +23,11 @@ for t in tasks:
     rs = [r for r in rows if r["task"] == t]
     n = int(t.split("_n")[1]); N = 1 << n
     fam = "kloosterman" if "kloos" in t else "gold"
-    phi_yes = (drift_stream(n, T_train=10, T_test=10) if t.startswith("drift") else forrelation_stream(n, fam, T_train=10, T_test=10))["phi_yes"]
+    if t.startswith("forr_rand"):
+        from qrcfit.tasks import forrelation_random_stream
+        phi_yes = forrelation_random_stream(n, T_train=20, T_test=10)["phi_yes"]
+    else:
+        phi_yes = (drift_stream(n, T_train=10, T_test=10) if t.startswith("drift") else forrelation_stream(n, fam, T_train=10, T_test=10))["phi_yes"]
     q = {m: np.median([r["curve"][f"{m:.0e}"] for r in rs]) for m in M}; qinf = np.median([r["curve"]["inf"] for r in rs])
     q1 = np.percentile([r["curve"]["1e+02"] for r in rs], [25, 75])
     def cl(name): return np.median([base[f"{t}|{r['seed']}"][name]["nmse"] for r in rs])

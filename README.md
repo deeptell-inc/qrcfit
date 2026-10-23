@@ -7,10 +7,11 @@ shots, oracle queries and experiment restarts explicitly.
 
 **Headline.** On 23 classical-input tasks no quantum configuration beats the best tuned classical model in
 accuracy or in shot/compute cost (0 of 989 configuration×task pairs). On oracle-input tasks whose target is a
-Forrelation correlation of two black-box phase functions, the fixed 2-query circuit wins on both axes for
-non-quadratic (Kloosterman) phases, with a classical query count that grows as √N (11× at n=10 → 197× at
-n=20); quadratic (Gold) phases are dequantised by a degree-2 learning attack, and white-box knowledge of the
-ideal relation removes the win.
+Forrelation correlation of two black-box phase functions drawn fresh at every step, the fixed 2-query circuit
+wins on both axes from N = 2^16 upward (all seeds), with the matching classical query count growing as √N.
+Structured families lose the win to classical structure exploitation: quadratic (Gold) phases are dequantised
+by a degree-2 learning attack, a publicly defined Kloosterman f admits a white-box importance-sampling
+estimator, and a fixed f lets a black-box classical monitor amortise the cost of reading it over the stream.
 
 ## Layout
 
@@ -18,7 +19,8 @@ ideal relation removes the win.
 |---|---|
 | `qrcfit/tasks.py` | task generators (NARMA, Mackey–Glass, Lorenz, memory capacity, cross-time products, delayed XOR, noisy variants, quantum-input collision-model streams, Forrelation oracle streams) |
 | `qrcfit/reservoirs.py` | exact density-matrix / covariance simulators: spin qubit-reset, Hou-style Hamiltonian encoding, pseudomode embedding, weak measurement, Gaussian CV, single/two-mode Kerr, quantum Kerr delay line, tuned variants |
-| `qrcfit/forrelation.py` | GF(2^n) tables, Kloosterman and Gold pairs, two-FWHT Forrelation, query-limited classical estimators (naive, √N all-pairs, degree-2 ANF attack, white-box), Forrelation feature map, drift-monitoring task |
+| `qrcfit/forrelation.py` | GF(2^n) tables, Kloosterman and Gold pairs, two-FWHT Forrelation, query-limited classical estimators (naive, √N all-pairs, degree-2 ANF attack, white-box, known-f importance sampling), Forrelation feature map, drift-monitoring task, fresh-pair regeneration |
+| `scripts/forr_knownf.py`, `scripts/tune_meanfield.py` | white-box known-f attack on the Kloosterman tasks; tuned ODE mean-field twin of the quantum Kerr delay line (added after the adversarial review) |
 | `qrcfit/baselines.py` | tuned classical baselines (echo-state networks, polynomial NARX, semiclassical Kerr delay line) and the shared readout tuner |
 | `qrcfit/evaluate.py` | ridge readout with validation-tuned regularisation, NMSE, finite-shot emulation |
 | `scripts/run_map.py` | builds `results/map.jsonl` (resumable, parallel) |
@@ -51,7 +53,7 @@ python scripts/make_report.py && python scripts/forr_report.py && python scripts
 - **A**: quantum NMSE with exact expectations below the best tuned classical model of any size.
 - **a**: below the best classical model with no more readout features than the quantum one.
 - **S\***: smallest shot count reaching a/A; **W**: experiment restarts per step (30 for projective readout, 1 for online weak measurement or the memoryless Forrelation circuit); shot-ops = S\*·W.
-- **★**: a, shot-ops ≤ 3×10⁵, and the ESN size needed to match the quantum exact-expectation NMSE is ≥ 10× the quantum feature count (or unreachable up to 1000 nodes).
+- **★**: a, shot-ops ≤ 3×10⁵, and the ESN size needed to match the quantum exact-expectation NMSE is ≥ 10× the quantum feature count (or unreachable up to 1000 nodes). Not evaluated on oracle tasks (their classical side is query-budgeted, not size-budgeted).
 - **✚** (Forrelation tasks): quantum at 2m oracle queries beats every black-box classical estimator using ≤ 20m queries, at m = 10² and 10³, in every seed.
 
 Definitions are implemented in `scripts/make_report.py` and `scripts/forr_report.py`; changing them and rerunning the two scripts re-derives every table from the raw cells.

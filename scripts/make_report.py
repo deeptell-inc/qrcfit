@@ -42,7 +42,7 @@ def derive(r):
     esn = sorted((v["size"], v["nmse"]) for v in b.values() if v["family"] == "esn")
     M = next((m for m, e in esn if e <= q), np.inf)
     return dict(q=q, cls=cls, cls_name=cls_name, eqW=eqW, eq_name=eq_name, Fq=Fq, S_eq=sstar(eqW), S_cls=sstar(cls), M=M,
-                A=q < cls, a=q < eqW, curve=r["curve"])
+                A=q < cls, a=q < eqW, curve=r["curve"], oracle=r["task"].startswith(("forr_", "drift_")))
 
 
 cells = defaultdict(list)
@@ -58,13 +58,15 @@ def agg(ds, cfg=""):
                cls_name=ds[0]["cls_name"], eq_name=ds[0]["eq_name"],
                A=all(d["A"] for d in ds), a=all(d["a"] for d in ds))
     out["ratio"] = np.log10(out["q"] / out["cls"]); out["ratio_eq"] = np.log10(out["q"] / out["eqW"])
-    out["W"] = 1 if ("weak" in cfg or cfg.startswith("forr")) else 30
+    out["W"] = 1 if (("weak" in cfg and "weakT" not in cfg) or cfg.startswith("forr")) else 30  # weakT = weak T1/T2 relaxation, not weak measurement
     # realistic-budget accuracy: 3e5 shot-ops -> S=1e4 for projective readout (W=30), S=1e5 for weak (W=1)
     kb = "1e+04" if out["W"] == 30 else "1e+05"
     out["q_budget"] = float(np.median([d["curve"][kb] for d in ds]))
     out["ratio_budget"] = np.log10(out["q_budget"] / out["cls"])
     out["scale"] = out["a"] and out["S_eq"] * out["W"] <= 3e5 and (np.isinf(out["M"]) or out["M"] / out["Fq"] >= 10)
     out["both"] = out["A"] and out["S_cls"] * out["W"] <= 3e5
+    if ds[0].get("oracle"):  # oracle tasks: report only the matched-query criterion (✚, scripts/forr_report.py)
+        out["scale"] = False; out["both"] = False
     return out
 
 

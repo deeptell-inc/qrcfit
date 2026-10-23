@@ -16,7 +16,7 @@ from concurrent.futures import ProcessPoolExecutor, as_completed
 import numpy as np
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
-from qrcfit.tasks import all_tasks
+from qrcfit.tasks import all_tasks, get_task
 from qrcfit.reservoirs import quantum_configs
 from qrcfit.baselines import all_baselines
 from qrcfit.evaluate import shot_curve, SHOTS
@@ -28,14 +28,14 @@ OUT = os.path.join(ROOT, "map.jsonl")
 
 
 def baseline_job(tname, seed, quick):
-    task = all_tasks(seed, quick)[tname]
+    task = get_task(tname, seed, quick)
     t0 = time.time()
     b = all_baselines(task, seed, quick=quick)
     return tname, seed, b, time.time() - t0
 
 
 def quantum_job(cname, tname, seed, quick):
-    task = all_tasks(seed, quick)[tname]
+    task = get_task(tname, seed, quick)
     res = quantum_configs(quick)[cname](seed)
     t0 = time.time()
     if getattr(res, "accepts", "u") == "task_shots":
@@ -55,8 +55,9 @@ def quantum_job(cname, tname, seed, quick):
 
 def _compat(cname, tname, allt):
     """Quantum-input reservoirs run only on quantum-input tasks and vice versa."""
-    qin_cfg = cname.startswith("spin_qin"); forr_cfg = cname.startswith("forr")  # forr tasks include drift_* (they carry "phi")
-    return qin_cfg == ("rho_seq" in allt[tname]) and forr_cfg == ("phi" in allt[tname])
+    qin_cfg = cname.startswith("spin_qin"); forr_cfg = cname.startswith("forr")
+    oracle_task = tname.startswith(("forr_", "drift_")); qin_task = tname.startswith("qin_")
+    return qin_cfg == qin_task and forr_cfg == oracle_task
 
 
 def derive(cell, base):
@@ -88,7 +89,7 @@ def main():
     ap.add_argument("--configs", nargs="*", default=None)
     ap.add_argument("--tasks", nargs="*", default=None)
     a = ap.parse_args()
-    tasks = list(all_tasks(0, a.quick))
+    tasks = list(all_tasks(0, a.quick)) if not a.tasks else list(a.tasks)
     if a.tasks:
         tasks = [t for t in tasks if t in a.tasks]
     configs = list(quantum_configs(a.quick))
@@ -108,7 +109,7 @@ def main():
             t, s, b, dt = f.result(); base[f"{t}|{s}"] = b
             json.dump(base, open(BASE_CACHE, "w"))
             print(f"[baseline] {t} seed{s} {dt:.0f}s best={min(v['nmse'] for v in b.values()):.3g}", flush=True)
-        allt = all_tasks(0, a.quick)
+        allt = None  # compatibility is decided from names (no suite build needed)
         futs = [ex.submit(quantum_job, c, t, s, a.quick) for c in configs for t in tasks for s in seeds
                 if (c, t, s) not in done and _compat(c, t, allt)]
         with open(OUT, "a") as fo:

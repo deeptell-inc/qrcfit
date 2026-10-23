@@ -1,6 +1,6 @@
 # QRC vs tuned classical: map
 
-3087 cells, 57 quantum configs × 35 tasks, seeds per cell = 3–10.
+3147 cells, 57 quantum configs × 41 tasks, seeds per cell = 3–10.
 
 All win criteria are recomputed here from the raw curves, so definitions can be changed post hoc.
   q        : NMSE of the quantum reservoir with exact expectations (S = inf)
@@ -213,12 +213,18 @@ Colour = log10(q / cls) (left) and log10(q / eqW) (right); blue = quantum more a
 | forr_qrc | forr_gold_n12 | 1 | 0.00157 | 0.00172 | 0.00157 (forr_full:4096) | 0.00157 (forr_anf2:222) | ∞ | ∞ | 1 | >1000 |  |  |  |  |
 | forr_qrc | forr_gold_n14 | 1 | 0.00157 | 0.00172 | 0.00157 (forr_full:16384) | 0.00157 (forr_anf2:276) | ∞ | ∞ | 1 | >1000 |  |  |  |  |
 | forr_qrc | forr_gold_n16 | 1 | 0.00157 | 0.00172 | 0.00157 (forr_full:65536) | 0.00157 (forr_anf2:338) | ∞ | ∞ | 1 | >1000 |  |  |  |  |
-| forr_qrc | forr_kloos_n10 | 1 | 0.00102 | 0.00106 | 0.00102 (forr_full:1024) | 0.928 (forr_anf2:176) | 1e+02 | ∞ | 1 | >1000 |  | y | ★ |  |
-| forr_qrc | forr_kloos_n12 | 1 | 0.000999 | 0.00103 | 0.000999 (forr_full:4096) | 1.01 (forr_anf2:222) | 1e+02 | ∞ | 1 | >1000 |  | y | ★ |  |
-| forr_qrc | forr_kloos_n14 | 1 | 0.000945 | 0.00096 | 0.000945 (forr_full:16384) | 1.02 (forr_anf2:276) | 1e+02 | 6e+06 | 1 | >1000 |  | y | ★ |  |
-| forr_qrc | forr_kloos_n16 | 1 | 0.001 | 0.00106 | 0.001 (forr_full:65536) | 1.04 (forr_anf2:338) | 1e+02 | 6e+06 | 1 | >1000 |  | y | ★ |  |
-| forr_qrc | forr_kloos_n18 | 1 | 0.000973 | 0.00103 | 0.000973 (forr_full:262144) | 1.04 (forr_anf2:408) | 1e+02 | ∞ | 1 | >1000 |  | y | ★ |  |
-| forr_qrc | forr_kloos_n20 | 1 | 0.000961 | 0.00101 | 0.000961 (forr_full:1048576) | 1.01 (forr_anf2:486) | 1e+02 | ∞ | 1 | >1000 |  | y | ★ |  |
+| forr_qrc | forr_kloos_n10 | 1 | 0.00102 | 0.00106 | 0.00102 (forr_full:1024) | 0.928 (forr_anf2:176) | 1e+02 | ∞ | 1 | >1000 |  | y |  |  |
+| forr_qrc | forr_kloos_n12 | 1 | 0.000999 | 0.00103 | 0.000999 (forr_full:4096) | 1.01 (forr_anf2:222) | 1e+02 | ∞ | 1 | >1000 |  | y |  |  |
+| forr_qrc | forr_kloos_n14 | 1 | 0.000945 | 0.00096 | 0.000945 (forr_full:16384) | 1.02 (forr_anf2:276) | 1e+02 | 6e+06 | 1 | >1000 |  | y |  |  |
+| forr_qrc | forr_kloos_n16 | 1 | 0.001 | 0.00106 | 0.001 (forr_full:65536) | 1.04 (forr_anf2:338) | 1e+02 | 6e+06 | 1 | >1000 |  | y |  |  |
+| forr_qrc | forr_kloos_n18 | 1 | 0.000973 | 0.00103 | 0.000973 (forr_full:262144) | 1.04 (forr_anf2:408) | 1e+02 | ∞ | 1 | >1000 |  | y |  |  |
+| forr_qrc | forr_kloos_n20 | 1 | 0.000961 | 0.00101 | 0.000961 (forr_full:1048576) | 1.01 (forr_anf2:486) | 1e+02 | ∞ | 1 | >1000 |  | y |  |  |
+| forr_qrc | forr_rand_n10 | 1 | 0.00117 | 0.00118 | 0.00117 (forr_full:1024) | 0.96 (forr_anf2:176) | 1e+02 | ∞ | 1 | >1000 |  | y |  |  |
+| forr_qrc | forr_rand_n12 | 1 | 0.000964 | 0.000993 | 0.000964 (forr_full:4096) | 1.01 (forr_anf2:222) | 1e+02 | ∞ | 1 | >1000 |  | y |  |  |
+| forr_qrc | forr_rand_n14 | 1 | 0.000829 | 0.000924 | 0.000829 (forr_full:16384) | 1.01 (forr_anf2:276) | 1e+02 | — | 1 | >1000 |  | y |  |  |
+| forr_qrc | forr_rand_n16 | 1 | 0.000861 | 0.000902 | 0.000861 (forr_full:65536) | 1.01 (forr_anf2:338) | 1e+02 | 6e+06 | 1 | >1000 |  | y |  |  |
+| forr_qrc | forr_rand_n18 | 1 | 0.000858 | 0.000938 | 0.000858 (forr_full:262144) | 1.03 (forr_anf2:408) | 1e+02 | 6e+06 | 1 | >1000 |  | y |  |  |
+| forr_qrc | forr_rand_n20 | 1 | 0.00083 | 0.0009 | 0.00083 (forr_full:1048576) | 1.02 (forr_anf2:486) | 1e+02 | — | 1 | >1000 |  | y |  |  |
 | qkerr_delay_D100_chi0 | lorenz_multi | 300 | 0.485 | 0.508 | 4.22e-06 (esn:300) | 4.22e-06 (esn:300) | — | — | 30 | 3 |  |  |  |  |
 | qkerr_delay_D100_chi0 | lorenz_uni | 300 | 0.572 | 0.672 | 0.000172 (esn:300) | 0.000172 (esn:300) | — | — | 30 | 3 |  |  |  |  |
 | qkerr_delay_D100_chi0 | mc30 | 300 | 0.0324 | 0.0377 | 1.5e-07 (kerr_delay:300) | 3.79e-07 (kerr_delay:100) | — | — | 30 | >1000 |  |  |  |  |
@@ -428,44 +434,44 @@ Colour = log10(q / cls) (left) and log10(q / eqW) (right); blue = quantum more a
 | spin_hamenc_chain_N6_xyz_V5 | xprod | 90 | 0.786 | 1 | 6.6e-24 (polynarx:(10, 2)) | 6.6e-24 (polynarx:(10, 2)) | — | — | 30 | 30 |  |  |  |  |
 | spin_hamenc_chain_N6_xyz_V5 | xprod_n1 | 90 | 0.785 | 1 | 0.00248 (polynarx:(10, 2)) | 0.00248 (polynarx:(10, 2)) | — | — | 30 | 30 |  |  |  |  |
 | spin_hamenc_chain_N6_xyz_V5 | xprod_n5 | 90 | 0.812 | 1 | 0.0592 (polynarx:(10, 2)) | 0.0592 (polynarx:(10, 2)) | — | — | 30 | 30 |  |  |  |  |
-| spin_hamenc_rand_N6_xyz_V10_weakT | lorenz_multi | 180 | 0.0222 | 0.266 | 4.22e-06 (esn:1000) | 0.000251 (esn:100) | — | — | 1 | 30 |  |  |  |  |
-| spin_hamenc_rand_N6_xyz_V10_weakT | lorenz_uni | 180 | 0.0629 | 0.431 | 0.000172 (esn:1000) | 0.000664 (esn:100) | — | — | 1 | 30 |  |  |  |  |
-| spin_hamenc_rand_N6_xyz_V10_weakT | mc30 | 180 | 0.705 | 0.763 | 1.5e-07 (kerr_delay:300) | 0.0345 (kerr_delay:30) | — | — | 1 | 30 |  |  |  |  |
-| spin_hamenc_rand_N6_xyz_V10_weakT | mc30_n5 | 180 | 0.716 | 0.77 | 0.0389 (kerr_delay:100) | 0.0613 (polynarx:(30, 1)) | — | — | 1 | 30 |  |  |  |  |
-| spin_hamenc_rand_N6_xyz_V10_weakT | mg10 | 180 | 0.00126 | 0.16 | 2.77e-09 (kerr_delay:300) | 4.15e-06 (esn:100) | — | — | 1 | 30 |  |  |  |  |
-| spin_hamenc_rand_N6_xyz_V10_weakT | mg10_small | 180 | 0.111 | 0.31 | 0.00471 (kerr_delay:300) | 0.00857 (esn:100) | — | — | 1 | 10 |  |  |  |  |
-| spin_hamenc_rand_N6_xyz_V10_weakT | mg20 | 180 | 0.000492 | 0.0737 | 9.57e-08 (esn:1000) | 2.26e-05 (esn:100) | — | — | 1 | 100 |  |  |  |  |
-| spin_hamenc_rand_N6_xyz_V10_weakT | narma10 | 180 | 0.606 | 0.699 | 0.0134 (kerr_delay:300) | 0.0924 (kerr_delay:30) | — | — | 1 | 3 |  |  |  |  |
-| spin_hamenc_rand_N6_xyz_V10_weakT | narma10_n5 | 180 | 0.63 | 0.712 | 0.0554 (kerr_delay:100) | 0.112 (kerr_delay:30) | — | — | 1 | 3 |  |  |  |  |
-| spin_hamenc_rand_N6_xyz_V10_weakT | narma10_small | 180 | 0.944 | 0.935 | 0.143 (polynarx:(30, 1)) | 0.278 (polynarx:(30, 1)) | — | — | 1 | 3 |  |  |  |  |
-| spin_hamenc_rand_N6_xyz_V10_weakT | narma2 | 180 | 0.119 | 0.336 | 5.73e-06 (esn:1000) | 0.000151 (esn:100) | — | — | 1 | 5 |  |  |  |  |
-| spin_hamenc_rand_N6_xyz_V10_weakT | narma20 | 180 | 0.697 | 0.791 | 0.1 (kerr_delay:300) | 0.187 (polynarx:(30, 1)) | — | — | 1 | 3 |  |  |  |  |
-| spin_hamenc_rand_N6_xyz_V10_weakT | narma5 | 180 | 0.226 | 0.505 | 0.000111 (esn:1000) | 0.00292 (esn:100) | — | — | 1 | 10 |  |  |  |  |
-| spin_hamenc_rand_N6_xyz_V10_weakT | xor | 180 | 0.416 | 0.647 | 4.38e-25 (polynarx:(20, 2)) | 0.0343 (kerr_delay:30) | — | — | 1 | 30 |  |  |  |  |
-| spin_hamenc_rand_N6_xyz_V10_weakT | xor_n1 | 180 | 0.42 | 0.648 | 0.00101 (kerr_delay:100) | 0.0502 (kerr_delay:30) | — | — | 1 | 30 |  |  |  |  |
-| spin_hamenc_rand_N6_xyz_V10_weakT | xor_n5 | 180 | 0.443 | 0.655 | 0.023 (esn:1000) | 0.0887 (kerr_delay:30) | — | — | 1 | 30 |  |  |  |  |
-| spin_hamenc_rand_N6_xyz_V10_weakT | xprod | 180 | 0.431 | 0.753 | 6.6e-24 (polynarx:(10, 2)) | 6.6e-24 (polynarx:(10, 2)) | — | — | 1 | 100 |  |  |  |  |
-| spin_hamenc_rand_N6_xyz_V10_weakT | xprod_n1 | 180 | 0.433 | 0.755 | 0.00248 (polynarx:(10, 2)) | 0.00248 (polynarx:(10, 2)) | — | — | 1 | 100 |  |  |  |  |
-| spin_hamenc_rand_N6_xyz_V10_weakT | xprod_n5 | 180 | 0.471 | 0.772 | 0.0592 (polynarx:(10, 2)) | 0.0592 (polynarx:(10, 2)) | — | — | 1 | 100 |  |  |  |  |
-| spin_hamenc_rand_N6_xyz_V10_weakT_amp1 | lorenz_multi | 180 | 0.00176 | 0.159 | 4.22e-06 (esn:1000) | 0.000251 (esn:100) | — | — | 1 | 100 |  |  |  |  |
-| spin_hamenc_rand_N6_xyz_V10_weakT_amp1 | lorenz_uni | 180 | 0.00522 | 0.207 | 0.000172 (esn:300) | 0.000664 (esn:100) | — | — | 1 | 100 |  |  |  |  |
-| spin_hamenc_rand_N6_xyz_V10_weakT_amp1 | mc30 | 180 | 0.967 | 1.02 | 1.5e-07 (kerr_delay:300) | 0.0345 (kerr_delay:30) | — | — | 1 | 3 |  |  |  |  |
-| spin_hamenc_rand_N6_xyz_V10_weakT_amp1 | mc30_n5 | 180 | 0.968 | 1.02 | 0.0389 (kerr_delay:100) | 0.0613 (kerr_delay:30) | — | — | 1 | 3 |  |  |  |  |
-| spin_hamenc_rand_N6_xyz_V10_weakT_amp1 | mg10 | 180 | 0.00325 | 0.405 | 2.77e-09 (kerr_delay:300) | 4.15e-06 (esn:100) | — | — | 1 | 30 |  |  |  |  |
-| spin_hamenc_rand_N6_xyz_V10_weakT_amp1 | mg10_small | 180 | 0.0793 | 0.71 | 0.00471 (esn:1000) | 0.00857 (esn:30) | — | — | 1 | 30 |  |  |  |  |
-| spin_hamenc_rand_N6_xyz_V10_weakT_amp1 | mg20 | 180 | 0.000458 | 0.125 | 9.57e-08 (esn:1000) | 2.26e-05 (esn:100) | — | — | 1 | 100 |  |  |  |  |
-| spin_hamenc_rand_N6_xyz_V10_weakT_amp1 | narma10 | 180 | 0.789 | 0.912 | 0.0134 (kerr_delay:300) | 0.0924 (kerr_delay:30) | — | — | 1 | 3 |  |  |  |  |
-| spin_hamenc_rand_N6_xyz_V10_weakT_amp1 | narma10_n5 | 180 | 0.799 | 0.921 | 0.0554 (kerr_delay:100) | 0.112 (kerr_delay:30) | — | — | 1 | 3 |  |  |  |  |
-| spin_hamenc_rand_N6_xyz_V10_weakT_amp1 | narma10_small | 180 | 0.992 | 1.01 | 0.143 (polynarx:(30, 1)) | 0.278 (polynarx:(30, 1)) | — | — | 1 | 3 |  |  |  |  |
-| spin_hamenc_rand_N6_xyz_V10_weakT_amp1 | narma2 | 180 | 0.311 | 0.671 | 5.73e-06 (esn:1000) | 0.000151 (esn:100) | — | — | 1 | 3 |  |  |  |  |
-| spin_hamenc_rand_N6_xyz_V10_weakT_amp1 | narma20 | 180 | 0.905 | 0.954 | 0.1 (kerr_delay:300) | 0.187 (polynarx:(30, 1)) | — | — | 1 | 3 |  |  |  |  |
-| spin_hamenc_rand_N6_xyz_V10_weakT_amp1 | narma5 | 180 | 0.698 | 0.899 | 0.000111 (esn:1000) | 0.00292 (esn:100) | — | — | 1 | 3 |  |  |  |  |
-| spin_hamenc_rand_N6_xyz_V10_weakT_amp1 | xor | 180 | 0.68 | 1.05 | 4.38e-25 (polynarx:(20, 2)) | 0.0343 (kerr_delay:30) | — | — | 1 | 10 |  |  |  |  |
-| spin_hamenc_rand_N6_xyz_V10_weakT_amp1 | xor_n1 | 180 | 0.716 | 1.05 | 0.00101 (kerr_delay:100) | 0.0502 (kerr_delay:30) | — | — | 1 | 10 |  |  |  |  |
-| spin_hamenc_rand_N6_xyz_V10_weakT_amp1 | xor_n5 | 180 | 0.726 | 1.03 | 0.023 (kerr_delay:100) | 0.0887 (kerr_delay:30) | — | — | 1 | 10 |  |  |  |  |
-| spin_hamenc_rand_N6_xyz_V10_weakT_amp1 | xprod | 180 | 0.781 | 0.961 | 6.6e-24 (polynarx:(10, 2)) | 6.6e-24 (polynarx:(10, 2)) | — | — | 1 | 30 |  |  |  |  |
-| spin_hamenc_rand_N6_xyz_V10_weakT_amp1 | xprod_n1 | 180 | 0.781 | 0.962 | 0.00248 (polynarx:(10, 2)) | 0.00248 (polynarx:(10, 2)) | — | — | 1 | 30 |  |  |  |  |
-| spin_hamenc_rand_N6_xyz_V10_weakT_amp1 | xprod_n5 | 180 | 0.813 | 0.972 | 0.0592 (polynarx:(10, 2)) | 0.0592 (polynarx:(10, 2)) | — | — | 1 | 30 |  |  |  |  |
+| spin_hamenc_rand_N6_xyz_V10_weakT | lorenz_multi | 180 | 0.0222 | 0.36 | 4.22e-06 (esn:1000) | 0.000251 (esn:100) | — | — | 30 | 30 |  |  |  |  |
+| spin_hamenc_rand_N6_xyz_V10_weakT | lorenz_uni | 180 | 0.0629 | 0.525 | 0.000172 (esn:1000) | 0.000664 (esn:100) | — | — | 30 | 30 |  |  |  |  |
+| spin_hamenc_rand_N6_xyz_V10_weakT | mc30 | 180 | 0.705 | 0.856 | 1.5e-07 (kerr_delay:300) | 0.0345 (kerr_delay:30) | — | — | 30 | 30 |  |  |  |  |
+| spin_hamenc_rand_N6_xyz_V10_weakT | mc30_n5 | 180 | 0.716 | 0.863 | 0.0389 (kerr_delay:100) | 0.0613 (polynarx:(30, 1)) | — | — | 30 | 30 |  |  |  |  |
+| spin_hamenc_rand_N6_xyz_V10_weakT | mg10 | 180 | 0.00126 | 0.263 | 2.77e-09 (kerr_delay:300) | 4.15e-06 (esn:100) | — | — | 30 | 30 |  |  |  |  |
+| spin_hamenc_rand_N6_xyz_V10_weakT | mg10_small | 180 | 0.111 | 0.628 | 0.00471 (kerr_delay:300) | 0.00857 (esn:100) | — | — | 30 | 10 |  |  |  |  |
+| spin_hamenc_rand_N6_xyz_V10_weakT | mg20 | 180 | 0.000492 | 0.126 | 9.57e-08 (esn:1000) | 2.26e-05 (esn:100) | — | — | 30 | 100 |  |  |  |  |
+| spin_hamenc_rand_N6_xyz_V10_weakT | narma10 | 180 | 0.606 | 0.782 | 0.0134 (kerr_delay:300) | 0.0924 (kerr_delay:30) | — | — | 30 | 3 |  |  |  |  |
+| spin_hamenc_rand_N6_xyz_V10_weakT | narma10_n5 | 180 | 0.63 | 0.791 | 0.0554 (kerr_delay:100) | 0.112 (kerr_delay:30) | — | — | 30 | 3 |  |  |  |  |
+| spin_hamenc_rand_N6_xyz_V10_weakT | narma10_small | 180 | 0.944 | 1.12 | 0.143 (polynarx:(30, 1)) | 0.278 (polynarx:(30, 1)) | — | — | 30 | 3 |  |  |  |  |
+| spin_hamenc_rand_N6_xyz_V10_weakT | narma2 | 180 | 0.119 | 0.485 | 5.73e-06 (esn:1000) | 0.000151 (esn:100) | — | — | 30 | 5 |  |  |  |  |
+| spin_hamenc_rand_N6_xyz_V10_weakT | narma20 | 180 | 0.697 | 0.83 | 0.1 (kerr_delay:300) | 0.187 (polynarx:(30, 1)) | — | — | 30 | 3 |  |  |  |  |
+| spin_hamenc_rand_N6_xyz_V10_weakT | narma5 | 180 | 0.226 | 0.565 | 0.000111 (esn:1000) | 0.00292 (esn:100) | — | — | 30 | 10 |  |  |  |  |
+| spin_hamenc_rand_N6_xyz_V10_weakT | xor | 180 | 0.416 | 0.814 | 4.38e-25 (polynarx:(20, 2)) | 0.0343 (kerr_delay:30) | — | — | 30 | 30 |  |  |  |  |
+| spin_hamenc_rand_N6_xyz_V10_weakT | xor_n1 | 180 | 0.42 | 0.814 | 0.00101 (kerr_delay:100) | 0.0502 (kerr_delay:30) | — | — | 30 | 30 |  |  |  |  |
+| spin_hamenc_rand_N6_xyz_V10_weakT | xor_n5 | 180 | 0.443 | 0.822 | 0.023 (esn:1000) | 0.0887 (kerr_delay:30) | — | — | 30 | 30 |  |  |  |  |
+| spin_hamenc_rand_N6_xyz_V10_weakT | xprod | 180 | 0.431 | 0.927 | 6.6e-24 (polynarx:(10, 2)) | 6.6e-24 (polynarx:(10, 2)) | — | — | 30 | 100 |  |  |  |  |
+| spin_hamenc_rand_N6_xyz_V10_weakT | xprod_n1 | 180 | 0.433 | 0.927 | 0.00248 (polynarx:(10, 2)) | 0.00248 (polynarx:(10, 2)) | — | — | 30 | 100 |  |  |  |  |
+| spin_hamenc_rand_N6_xyz_V10_weakT | xprod_n5 | 180 | 0.471 | 0.934 | 0.0592 (polynarx:(10, 2)) | 0.0592 (polynarx:(10, 2)) | — | — | 30 | 100 |  |  |  |  |
+| spin_hamenc_rand_N6_xyz_V10_weakT_amp1 | lorenz_multi | 180 | 0.00176 | 0.26 | 4.22e-06 (esn:1000) | 0.000251 (esn:100) | — | — | 30 | 100 |  |  |  |  |
+| spin_hamenc_rand_N6_xyz_V10_weakT_amp1 | lorenz_uni | 180 | 0.00522 | 0.43 | 0.000172 (esn:300) | 0.000664 (esn:100) | — | — | 30 | 100 |  |  |  |  |
+| spin_hamenc_rand_N6_xyz_V10_weakT_amp1 | mc30 | 180 | 0.967 | 1.13 | 1.5e-07 (kerr_delay:300) | 0.0345 (kerr_delay:30) | — | — | 30 | 3 |  |  |  |  |
+| spin_hamenc_rand_N6_xyz_V10_weakT_amp1 | mc30_n5 | 180 | 0.968 | 1.13 | 0.0389 (kerr_delay:100) | 0.0613 (kerr_delay:30) | — | — | 30 | 3 |  |  |  |  |
+| spin_hamenc_rand_N6_xyz_V10_weakT_amp1 | mg10 | 180 | 0.00325 | 0.681 | 2.77e-09 (kerr_delay:300) | 4.15e-06 (esn:100) | — | — | 30 | 30 |  |  |  |  |
+| spin_hamenc_rand_N6_xyz_V10_weakT_amp1 | mg10_small | 180 | 0.0793 | 0.943 | 0.00471 (esn:1000) | 0.00857 (esn:30) | — | — | 30 | 30 |  |  |  |  |
+| spin_hamenc_rand_N6_xyz_V10_weakT_amp1 | mg20 | 180 | 0.000458 | 0.232 | 9.57e-08 (esn:1000) | 2.26e-05 (esn:100) | — | — | 30 | 100 |  |  |  |  |
+| spin_hamenc_rand_N6_xyz_V10_weakT_amp1 | narma10 | 180 | 0.789 | 0.989 | 0.0134 (kerr_delay:300) | 0.0924 (kerr_delay:30) | — | — | 30 | 3 |  |  |  |  |
+| spin_hamenc_rand_N6_xyz_V10_weakT_amp1 | narma10_n5 | 180 | 0.799 | 0.997 | 0.0554 (kerr_delay:100) | 0.112 (kerr_delay:30) | — | — | 30 | 3 |  |  |  |  |
+| spin_hamenc_rand_N6_xyz_V10_weakT_amp1 | narma10_small | 180 | 0.992 | 2.07 | 0.143 (polynarx:(30, 1)) | 0.278 (polynarx:(30, 1)) | — | — | 30 | 3 |  |  |  |  |
+| spin_hamenc_rand_N6_xyz_V10_weakT_amp1 | narma2 | 180 | 0.311 | 0.788 | 5.73e-06 (esn:1000) | 0.000151 (esn:100) | — | — | 30 | 3 |  |  |  |  |
+| spin_hamenc_rand_N6_xyz_V10_weakT_amp1 | narma20 | 180 | 0.905 | 1.03 | 0.1 (kerr_delay:300) | 0.187 (polynarx:(30, 1)) | — | — | 30 | 3 |  |  |  |  |
+| spin_hamenc_rand_N6_xyz_V10_weakT_amp1 | narma5 | 180 | 0.698 | 0.975 | 0.000111 (esn:1000) | 0.00292 (esn:100) | — | — | 30 | 3 |  |  |  |  |
+| spin_hamenc_rand_N6_xyz_V10_weakT_amp1 | xor | 180 | 0.68 | 1.12 | 4.38e-25 (polynarx:(20, 2)) | 0.0343 (kerr_delay:30) | — | — | 30 | 10 |  |  |  |  |
+| spin_hamenc_rand_N6_xyz_V10_weakT_amp1 | xor_n1 | 180 | 0.716 | 1.12 | 0.00101 (kerr_delay:100) | 0.0502 (kerr_delay:30) | — | — | 30 | 10 |  |  |  |  |
+| spin_hamenc_rand_N6_xyz_V10_weakT_amp1 | xor_n5 | 180 | 0.726 | 1.11 | 0.023 (kerr_delay:100) | 0.0887 (kerr_delay:30) | — | — | 30 | 10 |  |  |  |  |
+| spin_hamenc_rand_N6_xyz_V10_weakT_amp1 | xprod | 180 | 0.781 | 1.09 | 6.6e-24 (polynarx:(10, 2)) | 6.6e-24 (polynarx:(10, 2)) | — | — | 30 | 30 |  |  |  |  |
+| spin_hamenc_rand_N6_xyz_V10_weakT_amp1 | xprod_n1 | 180 | 0.781 | 1.09 | 0.00248 (polynarx:(10, 2)) | 0.00248 (polynarx:(10, 2)) | — | — | 30 | 30 |  |  |  |  |
+| spin_hamenc_rand_N6_xyz_V10_weakT_amp1 | xprod_n5 | 180 | 0.813 | 1.1 | 0.0592 (polynarx:(10, 2)) | 0.0592 (polynarx:(10, 2)) | — | — | 30 | 30 |  |  |  |  |
 | spin_hamenc_rand_N6_xyz_V5 | lorenz_multi | 90 | 0.000905 | 0.133 | 4.22e-06 (esn:300) | 0.0135 (esn:30) | ∞ | — | 30 | 100 |  | y |  |  |
 | spin_hamenc_rand_N6_xyz_V5 | lorenz_uni | 90 | 0.00516 | 0.365 | 0.000172 (esn:300) | 0.00808 (esn:30) | ∞ | — | 30 | 100 |  |  |  |  |
 | spin_hamenc_rand_N6_xyz_V5 | mc30 | 90 | 0.957 | 0.988 | 1.5e-07 (kerr_delay:300) | 0.0345 (kerr_delay:30) | — | — | 30 | 3 |  |  |  |  |
@@ -1021,10 +1027,10 @@ Colour = log10(q / cls) (left) and log10(q / eqW) (right); blue = quantum more a
 
 ## Wins by axis
 
-- **A: accuracy vs best classical (any size), all seeds:** 0/1001 cells
-- **a: accuracy vs equal-readout-cost classical, all seeds:** 45/1001 cells
+- **A: accuracy vs best classical (any size), all seeds:** 0/1007 cells
+- **a: accuracy vs equal-readout-cost classical, all seeds:** 51/1007 cells
   - cv_kerr_chi0.3: xprod, xprod_n1, xprod_n5
-  - forr_qrc: forr_kloos_n10, forr_kloos_n12, forr_kloos_n14, forr_kloos_n16, forr_kloos_n18, forr_kloos_n20
+  - forr_qrc: forr_kloos_n10, forr_kloos_n12, forr_kloos_n14, forr_kloos_n16, forr_kloos_n18, forr_kloos_n20, forr_rand_n10, forr_rand_n12, forr_rand_n14, forr_rand_n16, forr_rand_n18, forr_rand_n20
   - spin_hamenc_chain_N6_xyz_V5: lorenz_multi
   - spin_hamenc_rand_N6_xyz_V5: lorenz_multi
   - spin_reset_chain_N4_z: mc30, mc30_n5, narma20
@@ -1042,9 +1048,8 @@ Colour = log10(q / cls) (left) and log10(q / eqW) (right); blue = quantum more a
   - spin_reset_rand_N6_zz_weak0.3: mg10, mg10_small, mg20, xor_n5
   - spin_reset_rand_N6_zz_weak0.6: mg10, mg10_small
   - spin_reset_rand_N8_z: mc30, mc30_n5, narma10, narma10_n5
-- **★ scale win:** 6/1001 cells
-  - forr_qrc: forr_kloos_n10, forr_kloos_n12, forr_kloos_n14, forr_kloos_n16, forr_kloos_n18, forr_kloos_n20
-- **◆ both (A and S*_cls × W ≤ 3e5):** 0/1001 cells
+- **★ scale win:** 0/1007 cells
+- **◆ both (A and S*_cls × W ≤ 3e5):** 0/1007 cells
 
 ## Best quantum config per task (median over seeds)
 
@@ -1062,6 +1067,12 @@ Colour = log10(q / cls) (left) and log10(q / eqW) (right); blue = quantum more a
 | forr_kloos_n16 | forr_qrc (1) | 0.001 | 0.001 (forr_full:65536) | 1 | 1.04 | 0.00097 |
 | forr_kloos_n18 | forr_qrc (1) | 0.000973 | 0.000973 (forr_full:262144) | 1 | 1.04 | 0.00094 |
 | forr_kloos_n20 | forr_qrc (1) | 0.000961 | 0.000961 (forr_full:1048576) | 1 | 1.01 | 0.00095 |
+| forr_rand_n10 | forr_qrc (1) | 0.00117 | 0.00117 (forr_full:1024) | 1 | 0.96 | 0.0012 |
+| forr_rand_n12 | forr_qrc (1) | 0.000964 | 0.000964 (forr_full:4096) | 1 | 1.01 | 0.00095 |
+| forr_rand_n14 | forr_qrc (1) | 0.000829 | 0.000829 (forr_full:16384) | 1 | 1.01 | 0.00082 |
+| forr_rand_n16 | forr_qrc (1) | 0.000861 | 0.000861 (forr_full:65536) | 1 | 1.01 | 0.00085 |
+| forr_rand_n18 | forr_qrc (1) | 0.000858 | 0.000858 (forr_full:262144) | 1 | 1.03 | 0.00083 |
+| forr_rand_n20 | forr_qrc (1) | 0.00083 | 0.00083 (forr_full:1048576) | 1 | 1.02 | 0.00081 |
 | lorenz_multi | spin_hamenc_chain_N6_xyz_V5 (90) | 0.000506 | 4.22e-06 (esn:1000) | 1.2e+02 | 0.0135 | 0.037 |
 | lorenz_uni | spin_hamenc_rand_N6_xyz_V5 (90) | 0.00516 | 0.000172 (esn:300) | 30 | 0.00808 | 0.64 |
 | mc30 | qkerr_delay_D100_tuned (300) | 0.0209 | 1.5e-07 (kerr_delay:300) | 1.4e+05 | 3.79e-07 | 5.5e+04 |

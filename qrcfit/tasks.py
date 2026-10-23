@@ -173,6 +173,35 @@ def quantum_input(T_train=1000, T_test=500, seed=0, phi=np.pi / 4, block=20, acc
     return out
 
 
+def forrelation_random_stream(n=12, T_train=1000, T_test=500, seed=0, p_switch=0.1):
+    """Fresh random oracle pair at EVERY step (the Aaronson–Ambainis distribution): f_t uniform ±1 (regenerated
+    from a per-step seed), g_t = sign(Walsh f_t) on YES steps (Phi ≈ 0.8) and its translate by random e != 0
+    on NO steps (|Phi| ~ N^{-1/2}). Nothing is public and nothing persists across steps, so neither the
+    known-f white-box attack nor query amortisation over the stream applies; the classical Ω(√N/log N)
+    per-step query lower bound holds for this distribution."""
+    from .forrelation import fwht
+    rng = np.random.default_rng(seed)
+    N = 1 << n
+    T = WASHOUT + T_train + T_test
+    h = np.zeros(T, dtype=np.int64); h[0] = 1
+    for t in range(1, T):
+        h[t] = h[t - 1] ^ (rng.uniform() < p_switch)
+    e = np.where(h == 1, 0, rng.integers(1, N, T))
+    fseed = rng.integers(0, 2 ** 62, T)
+    phi = np.zeros(T)
+    for t in range(T):
+        f = 1.0 - 2.0 * np.random.default_rng(int(fseed[t])).integers(0, 2, N)
+        fh = fwht(f); g = np.where(fh >= 0, 1.0, -1.0)
+        phi[t] = float(np.dot(np.roll(g, 0)[np.arange(N) ^ int(e[t])], fh) / N ** 1.5)  # Phi(f, g o tau_e)
+    uu = (1 + phi) / 8
+    yn = np.zeros(T)
+    for t in range(10, T - 1):
+        yn[t + 1] = 0.3 * yn[t] + 0.05 * yn[t] * yn[t - 9:t + 1].sum() + 1.5 * uu[t - 9] * uu[t] + 0.1
+    out = _pack(f"forr_rand_n{n}", phi, np.stack([phi, h.astype(float), yn], 1), T_train, T_test)
+    out.update(fseed=fseed, e=e, n=n, phi=phi[:out["u"].shape[0]], phi_yes=float(np.median(phi[h == 1])))
+    return out
+
+
 def forrelation_stream(n=12, family="kloosterman", T_train=1000, T_test=500, seed=0, p_switch=0.1):
     """Oracle-pair stream. Hidden two-state Markov chain h_t; YES (h=1): (chi_c f, g o tau_c) with random c
     (Phi unchanged by the §2 invariance), NO (h=0): additionally g translated by random e != 0 (Phi ~ 0).
@@ -223,6 +252,23 @@ def all_tasks(seed=0, quick=False):
         for n in (10, 12, 14, 16):
             ts += [forrelation_stream(n, "kloosterman", **kw), forrelation_stream(n, "gold", **kw)]
         ts += [forrelation_stream(18, "kloosterman", **kw), forrelation_stream(20, "kloosterman", **kw)]
+        ts += [forrelation_random_stream(n, **kw) for n in (10, 12, 14, 16, 18, 20)]
         from .forrelation import drift_stream
         ts += [drift_stream(12, **kw), drift_stream(16, **kw)]
     return {t["name"]: t for t in ts}
+
+
+def get_task(name, seed=0, quick=False):
+    """Build one task by name without constructing the whole suite (expensive oracle tasks are built lazily)."""
+    import re
+    m = re.match(r"forr_rand_n(\d+)$", name)
+    if m:
+        return forrelation_random_stream(int(m.group(1)), seed=seed)
+    m = re.match(r"forr_(kloos|gold)_n(\d+)$", name)
+    if m:
+        return forrelation_stream(int(m.group(2)), "kloosterman" if m.group(1) == "kloos" else "gold", seed=seed)
+    m = re.match(r"drift_kloos_n(\d+)$", name)
+    if m:
+        from .forrelation import drift_stream
+        return drift_stream(int(m.group(1)), seed=seed)
+    return all_tasks(seed, quick)[name]
