@@ -1,0 +1,17 @@
+__pycache__/
+*.pyc
+*.egg-info/
+.pytest_cache/
+results_quick/
+results/*.log
+results/apps/*.log
+paper/*.aux
+paper/*.log
+paper/*.out
+paper/*.blg
+paper/*.bbl
+paper/build*.log
+paper/bibtex.log
+paper/mainNotes.bib
+.DS_Store
+paper/
