@@ -39,16 +39,18 @@ def attack(f, g, k):
 if __name__ == "__main__":
     out = json.load(open(OUT)) if os.path.exists(OUT) else {}
     base = json.load(open(os.path.join(ROOT, "baselines.json")))
-    for n in (10, 12, 14, 16):
-        seeds = sorted(int(k.split("|")[1]) for k in base if k.startswith(f"forr_mm_n{n}|"))
-        for seed in seeds:
-            key = f"forr_mm_n{n}|{seed}"
-            if key in out:
-                continue
-            task = forrelation_mm_stream(n, seed=seed); T = len(task["phi"]); est = np.zeros(T); qs = np.zeros(T, int)
-            for t in range(T):
-                ft, gt = fresh_pair(task, t); est[t], qs[t] = attack(ft, gt, n // 2)
-            nm, name = readout_best(est[:, None], task, seed)
-            out[key] = dict(max_abs_err_phi=float(np.max(np.abs(est - task["phi"]))), max_queries=int(qs.max()), mean_queries=float(qs.mean()), nmse=nm, readout=name)
-            json.dump(out, open(OUT, "w"), indent=1); print(key, out[key], flush=True)
+    for fam, masked in (("mm", False), ("mmx", True)):  # mmx = affinely masked (Girish–Servedio) pairs: the attack has no block axes to query along
+        for n in (10, 12, 14, 16):
+            seeds = sorted(int(k.split("|")[1]) for k in base if k.startswith(f"forr_{fam}_n{n}|")) or list(range(10))
+            for seed in seeds:
+                key = f"forr_{fam}_n{n}|{seed}"
+                if key in out:
+                    continue
+                task = forrelation_mm_stream(n, seed=seed, masked=masked); T = len(task["phi"]); est = np.zeros(T); qs = np.zeros(T, int)
+                for t in range(T):
+                    ft, gt = fresh_pair(task, t); est[t], qs[t] = attack(ft, gt, n // 2)
+                nm, name = readout_best(est[:, None], task, seed)
+                err = np.abs(est - task["phi"])
+                out[key] = dict(max_abs_err_phi=float(err.max()), frac_steps_wrong=float(np.mean(err > 0.5)), max_queries=int(qs.max()), mean_queries=float(qs.mean()), nmse=nm, readout=name)
+                json.dump(out, open(OUT, "w"), indent=1); print(key, out[key], flush=True)
     print("DONE")

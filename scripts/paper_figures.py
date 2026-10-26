@@ -319,7 +319,7 @@ if not HAVE_FORR:
             numbers[k] = v
 
 if HAVE_FORR:
-    HAVE_MM = any(t.startswith("forr_mm") for t in orc_tasks)
+    HAVE_MM = any(t.startswith("forr_mmx") for t in orc_tasks)  # panel (b) shows the affinely masked family; the unmasked forr_mm family is tabulated only
     fig, axg = plt.subplots(2, 3, figsize=(DOUBLE, 4.4), gridspec_kw=dict(wspace=0.38, hspace=0.5, left=0.075, right=0.995, top=0.94, bottom=0.1))
     axes = [axg[0, 0], axg[0, 1], axg[0, 2], axg[1, 0], axg[1, 1], axg[1, 2]]  # rand, mm, kloos, gold, drift, Q* vs N
     QS = [20, 200, 2000, 20000]
@@ -341,14 +341,14 @@ if HAVE_FORR:
 
 
     qstar = {}
-    for ax, fam, title in [(axes[0], "rand", "Fresh random pairs"), (axes[1], "mm", "Fresh Maiorana--McFarland pairs"), (axes[2], "kloos", "Kloosterman (fixed public $f$)"), (axes[3], "gold", "Gold (quadratic phase)")]:
-        if fam == "mm" and not HAVE_MM:
+    for ax, fam, title in [(axes[0], "rand", "Fresh random pairs"), (axes[1], "mmx", "Fresh masked Maiorana--McFarland pairs"), (axes[2], "kloos", "Kloosterman (fixed public $f$)"), (axes[3], "gold", "Gold (quadratic phase)")]:
+        if fam == "mmx" and not HAVE_MM:
             ax.axis("off"); continue
         fam_n = [n for n in FORR_N if f"forr_{fam}_n{n}|0" in base]
         for n in fam_n:
             t = f"forr_{fam}_n{n}"
             qm = [q_med(t, k) for k in ["1e+02", "1e+03", "1e+04"]]
-            ax.plot([200, 2000, 20000], qm, "-o", ms=3.5, color=NCOL[n], label=f"quantum, $n={n}$" if fam in ("rand", "mm") or n == max(fam_n) else None, zorder=4)
+            ax.plot([200, 2000, 20000], qm, "-o", ms=3.5, color=NCOL[n], label=f"quantum, $n={n}$" if fam in ("rand", "mmx") or n == max(fam_n) else None, zorder=4)
             opt = [b_med(t, f"{SQRTN_KEY}:{Q}") for Q in QS]; nai = [b_med(t, f"forr_naive:{Q}") for Q in QS]
             ax.plot(QS, opt, "--s", ms=3, color=NCOL[n], mfc="none", label=f"classical $\\sqrt{{N}}$ all-pairs, $n={n}$" if n == max(fam_n) else None)
             ax.plot(QS, nai, ":", color=NCOL[n], lw=0.8, label="classical naive sampling" if n == max(fam_n) else None)
@@ -362,7 +362,7 @@ if HAVE_FORR:
             ax.plot([Qa], [anf], marker="*", ms=7, color=NCOL[n], mec="k", mew=0.4, ls="none", label="classical degree-2 ANF attack" if n == max(fam_n) else None, zorder=5)
             forr_stats[t] = dict(N=1 << n, quantum_m1e2_1e3_1e4=[float(f"{v:.3g}") for v in qm], quantum_exact=float(f"{q_med(t, 'inf'):.3g}"),
                                  sqrtN_estimator=SQRTN_KEY, sqrtN_Q20_200_2000_20000=[float(f"{v:.3g}") for v in opt], naive_Q20_200_2000_20000=[float(f"{v:.3g}") for v in nai], anf2=dict(Q=Qa, nmse=float(f"{anf:.3g}")))
-            if fam in ("rand", "mm", "kloos"):
+            if fam in ("rand", "mmx", "kloos"):
                 qs_ = next((Q for Q, v in zip(QS, opt) if v <= qm[0]), np.inf)  # first classical budget whose median <= quantum at 200 queries
                 lq, lo = np.log10(QS), np.log10(opt)
                 qi = 10 ** np.interp(np.log10(qm[0]), lo[::-1], lq[::-1]) if qm[0] >= opt[-1] else np.inf  # log-log interpolated crossing
@@ -388,7 +388,7 @@ if HAVE_FORR:
     ax.set_xlabel("oracle queries per step"); ax.set_ylabel("NMSE (mean of 2 targets)"); ax.set_title("Drift monitoring (fixed $f$)", fontsize=8)
     ax.legend(frameon=False, loc="lower left", handletextpad=0.2, borderpad=0.2, fontsize=5)
     ax = axes[5]
-    FC = {"rand": ("#08306b", "o", "fresh random"), "mm": ("#d62728", "s", "fresh Maiorana--McFarland"), "kloos": ("#7f7f7f", "^", "fixed Kloosterman")}
+    FC = {"rand": ("#08306b", "o", "fresh random"), "mmx": ("#d62728", "s", "fresh masked Maiorana--McFarland"), "kloos": ("#7f7f7f", "^", "fixed Kloosterman")}
     for fam, pts in qstar.items():
         pts = sorted(pts); Ns = [1 << n for n, _, _ in pts]
         qi = [q for _, _, q in pts]; qs_ = [q for _, q, _ in pts]
@@ -596,6 +596,16 @@ if os.path.exists(mf_path):
                 mfs[f"{tn}|D{D}"] = dict(n_seeds=len(recs), tuned_meanfield=float(f"{np.median(m_):.3g}"), tuned_quantum=float(f"{np.median(q_):.3g}"), ratio_q_over_mf=float(f"{np.median(q_) / np.median(m_):.3g}"), seeds_quantum_better=int(np.sum(q_ < m_)))
     rev["tune_meanfield"] = mfs
 # (ix) shot-wall family statistics after the weakT reclassification are already in shot_degradation_* (family() fixed)
+mma_path = os.path.join(RES, "forr_mm_attack.json")
+if os.path.exists(mma_path):
+    mma = json.load(open(mma_path)); att = {}
+    for fam in ("mm", "mmx"):
+        for n in (10, 12, 14, 16):
+            ks = [k for k in mma if k.startswith(f"forr_{fam}_n{n}|")]
+            if ks:
+                att[f"forr_{fam}_n{n}"] = dict(n_seeds=len(ks), max_abs_err=max(mma[k]["max_abs_err_phi"] for k in ks), frac_steps_wrong_median=round(float(np.median([mma[k].get("frac_steps_wrong", 0.0) for k in ks])), 3),
+                                                max_queries=max(mma[k]["max_queries"] for k in ks), mean_queries=round(float(np.mean([mma[k]["mean_queries"] for k in ks])), 1), nmse_median=float(f"{np.median([mma[k]['nmse'] for k in ks]):.3g}"))
+    rev["mm_attack"] = att
 note("review_numbers", rev, "recomputed after the adversarial panel; sources: results/map.jsonl, baselines.json, tune_qkerr.json, kerr_twin.json, forr_knownf.json, tune_meanfield.json")
 json.dump(numbers, open(os.path.join(OUT, "numbers.json"), "w"), indent=1, default=float)
 print(json.dumps(rev, indent=1, default=str)[:6000])
