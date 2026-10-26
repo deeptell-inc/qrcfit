@@ -1,8 +1,8 @@
 # qrcfit — a resource map of quantum reservoir computing against tuned classical baselines
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23589290.svg)](https://doi.org/10.5281/zenodo.23589290)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23589289.svg)](https://doi.org/10.5281/zenodo.23589289)
 
-Archived snapshot (code, results and manuscript PDF): https://doi.org/10.5281/zenodo.23589290 (concept DOI 10.5281/zenodo.23589289).
+Archived snapshots (code, results and manuscript PDF): v0.1.1 https://doi.org/10.5281/zenodo.23663395, v0.1.0 https://doi.org/10.5281/zenodo.23589290; all versions 10.5281/zenodo.23589289.
 
 Companion code and data for *"A resource map of quantum reservoir computing: where it beats tuned classical
 baselines"* (manuscript not included in this repository). The package evaluates 57 quantum reservoir configurations on 35 tasks
@@ -69,4 +69,4 @@ cell for classical-input tasks, 10 for the 12 Forrelation-family tasks; all rand
 
 ## License
 
-MIT (see `LICENSE`). Please cite the manuscript and the Zenodo archive (`CITATION.cff`, DOI 10.5281/zenodo.23589290).
+MIT (see `LICENSE`). Please cite the manuscript and the Zenodo archive (`CITATION.cff`, DOI 10.5281/zenodo.23663395).

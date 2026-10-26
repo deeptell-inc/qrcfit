@@ -4,11 +4,14 @@ title: "qrcfit: a resource map of quantum reservoir computing against tuned clas
 version: 0.1.1
 date-released: 2026-10-26
 license: MIT
-doi: 10.5281/zenodo.23589290
+doi: 10.5281/zenodo.23663395
 identifiers:
   - type: doi
+    value: 10.5281/zenodo.23663395
+    description: "Zenodo deposit v0.1.1 (manuscript, code and results)"
+  - type: doi
     value: 10.5281/zenodo.23589290
-    description: "Zenodo deposit v0.1.0 (manuscript, code and results)"
+    description: "Zenodo deposit v0.1.0"
   - type: doi
     value: 10.5281/zenodo.23589289
     description: "Zenodo concept DOI (all versions)"
@@ -28,4 +31,4 @@ preferred-citation:
       affiliation: "QIRI (Quantum Integrated Research Institute Inc.), Tokyo 107-0061, Japan"
   year: 2026
   journal: "manuscript"
-  doi: 10.5281/zenodo.23589290
+  doi: 10.5281/zenodo.23663395
