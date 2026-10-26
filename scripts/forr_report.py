@@ -26,6 +26,9 @@ for t in tasks:
     if t.startswith("forr_rand"):
         from qrcfit.tasks import forrelation_random_stream
         phi_yes = forrelation_random_stream(n, T_train=20, T_test=10)["phi_yes"]
+    elif t.startswith("forr_mm"):
+        from qrcfit.tasks import forrelation_mm_stream
+        phi_yes = forrelation_mm_stream(n, T_train=20, T_test=10)["phi_yes"]
     else:
         phi_yes = (drift_stream(n, T_train=10, T_test=10) if t.startswith("drift") else forrelation_stream(n, fam, T_train=10, T_test=10))["phi_yes"]
     q = {m: np.median([r["curve"][f"{m:.0e}"] for r in rs]) for m in M}; qinf = np.median([r["curve"]["inf"] for r in rs])

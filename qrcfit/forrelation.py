@@ -146,11 +146,29 @@ def drift_stream(n=16, T_train=1000, T_test=500, seed=0):
     return out
 
 
+def mm_pair(n, seed):
+    """Maiorana–McFarland bent pair on n = 2k bits from a seed: f(x,y) = (-1)^{x.pi(y) + h(y)}, exact dual
+    g(a,b) = (-1)^{b.pi^{-1}(a) + h(pi^{-1}(a))}. Index convention: z = x + 2^k y (x = low k bits)."""
+    assert n % 2 == 0
+    k = n // 2; K = 1 << k; N = 1 << n
+    rng = np.random.default_rng(seed)
+    pi = rng.permutation(K); pinv = np.empty(K, dtype=np.int64); pinv[pi] = np.arange(K)
+    hb = rng.integers(0, 2, K)
+    z = np.arange(N); x = z & (K - 1); y = z >> k
+    f = 1.0 - 2.0 * ((_parity(x & pi[y]) ^ hb[y]) & 1)
+    a = x; b = y  # (a, b) use the same index convention
+    g = 1.0 - 2.0 * ((_parity(b & pinv[a]) ^ hb[pinv[a]]) & 1)
+    return f, g
+
+
 def fresh_pair(task, t):
-    """(f_t, g_t) tables of a forr_rand task step, regenerated from the per-step seed (no persistence)."""
+    """(f_t, g_t) tables of a fresh-pair task step, regenerated from the per-step seed (no persistence)."""
     N = 1 << task["n"]
-    f = 1.0 - 2.0 * np.random.default_rng(int(task["fseed"][t])).integers(0, 2, N)
-    g = np.where(fwht(f) >= 0, 1.0, -1.0)
+    if task.get("family") == "mm":
+        f, g = mm_pair(task["n"], int(task["fseed"][t]))
+    else:
+        f = 1.0 - 2.0 * np.random.default_rng(int(task["fseed"][t])).integers(0, 2, N)
+        g = np.where(fwht(f) >= 0, 1.0, -1.0)
     return f, g[np.arange(N) ^ int(task["e"][t])]
 
 

@@ -319,7 +319,9 @@ if not HAVE_FORR:
             numbers[k] = v
 
 if HAVE_FORR:
-    fig, axes = plt.subplots(1, 4, figsize=(DOUBLE, 2.3), gridspec_kw=dict(wspace=0.42, left=0.075, right=0.995, top=0.9, bottom=0.21))
+    HAVE_MM = any(t.startswith("forr_mm") for t in orc_tasks)
+    fig, axg = plt.subplots(2, 3, figsize=(DOUBLE, 4.4), gridspec_kw=dict(wspace=0.38, hspace=0.5, left=0.075, right=0.995, top=0.94, bottom=0.1))
+    axes = [axg[0, 0], axg[0, 1], axg[0, 2], axg[1, 0], axg[1, 1], axg[1, 2]]  # rand, mm, kloos, gold, drift, Q* vs N
     QS = [20, 200, 2000, 20000]
     NCOL = {10: "#c6dbef", 12: "#6baed6", 14: "#2171b5", 16: "#08306b"}
     forr_stats = {}
@@ -338,12 +340,15 @@ if HAVE_FORR:
         return float(np.median([v[name]["nmse"] for k, v in base.items() if k.startswith(task + "|") and name in v]))
 
 
-    for ax, fam, title in [(axes[0], "rand", "Fresh random pairs"), (axes[1], "kloos", "Kloosterman (fixed public $f$)"), (axes[2], "gold", "Gold (quadratic phase)")]:
+    qstar = {}
+    for ax, fam, title in [(axes[0], "rand", "Fresh random pairs"), (axes[1], "mm", "Fresh Maiorana--McFarland pairs"), (axes[2], "kloos", "Kloosterman (fixed public $f$)"), (axes[3], "gold", "Gold (quadratic phase)")]:
+        if fam == "mm" and not HAVE_MM:
+            ax.axis("off"); continue
         fam_n = [n for n in FORR_N if f"forr_{fam}_n{n}|0" in base]
         for n in fam_n:
             t = f"forr_{fam}_n{n}"
             qm = [q_med(t, k) for k in ["1e+02", "1e+03", "1e+04"]]
-            ax.plot([200, 2000, 20000], qm, "-o", ms=3.5, color=NCOL[n], label=f"quantum, $n={n}$" if fam == "rand" or n == max(fam_n) else None, zorder=4)
+            ax.plot([200, 2000, 20000], qm, "-o", ms=3.5, color=NCOL[n], label=f"quantum, $n={n}$" if fam in ("rand", "mm") or n == max(fam_n) else None, zorder=4)
             opt = [b_med(t, f"{SQRTN_KEY}:{Q}") for Q in QS]; nai = [b_med(t, f"forr_naive:{Q}") for Q in QS]
             ax.plot(QS, opt, "--s", ms=3, color=NCOL[n], mfc="none", label=f"classical $\\sqrt{{N}}$ all-pairs, $n={n}$" if n == max(fam_n) else None)
             ax.plot(QS, nai, ":", color=NCOL[n], lw=0.8, label="classical naive sampling" if n == max(fam_n) else None)
@@ -357,12 +362,18 @@ if HAVE_FORR:
             ax.plot([Qa], [anf], marker="*", ms=7, color=NCOL[n], mec="k", mew=0.4, ls="none", label="classical degree-2 ANF attack" if n == max(fam_n) else None, zorder=5)
             forr_stats[t] = dict(N=1 << n, quantum_m1e2_1e3_1e4=[float(f"{v:.3g}") for v in qm], quantum_exact=float(f"{q_med(t, 'inf'):.3g}"),
                                  sqrtN_estimator=SQRTN_KEY, sqrtN_Q20_200_2000_20000=[float(f"{v:.3g}") for v in opt], naive_Q20_200_2000_20000=[float(f"{v:.3g}") for v in nai], anf2=dict(Q=Qa, nmse=float(f"{anf:.3g}")))
+            if fam in ("rand", "mm", "kloos"):
+                qs_ = next((Q for Q, v in zip(QS, opt) if v <= qm[0]), np.inf)  # first classical budget whose median <= quantum at 200 queries
+                lq, lo = np.log10(QS), np.log10(opt)
+                qi = 10 ** np.interp(np.log10(qm[0]), lo[::-1], lq[::-1]) if qm[0] >= opt[-1] else np.inf  # log-log interpolated crossing
+                qstar.setdefault(fam, []).append((n, qs_, qi))
         ax.set_xscale("log"); ax.set_yscale("log"); ax.set_xlim(12, 4e4); ax.set_ylim(1e-4, 2)
         ax.set_xlabel("oracle queries per step"); ax.set_title(title, fontsize=7.5)
     axes[0].set_ylabel("NMSE (mean of 3 targets)")
-    for a_ in axes[:3]:
-        a_.legend(frameon=False, loc="lower left", handletextpad=0.2, borderpad=0.2, fontsize=5)
-    ax = axes[3]
+    for a_ in axes[:4]:
+        if a_.axison:
+            a_.legend(frameon=False, loc="lower left", handletextpad=0.2, borderpad=0.2, fontsize=5)
+    ax = axes[4]
     for n, col in [(12, "#6baed6"), (16, "#08306b")]:
         t = f"drift_kloos_n{n}"
         qm = [q_med(t, k) for k in ["1e+02", "1e+03", "1e+04"]]
@@ -376,7 +387,22 @@ if HAVE_FORR:
     ax.set_xscale("log"); ax.set_yscale("log"); ax.set_xlim(12, 4e4); ax.set_ylim(1e-4, 2)
     ax.set_xlabel("oracle queries per step"); ax.set_ylabel("NMSE (mean of 2 targets)"); ax.set_title("Drift monitoring (fixed $f$)", fontsize=8)
     ax.legend(frameon=False, loc="lower left", handletextpad=0.2, borderpad=0.2, fontsize=5)
-    for ax, p in zip(axes, "abcd"):
+    ax = axes[5]
+    FC = {"rand": ("#08306b", "o", "fresh random"), "mm": ("#d62728", "s", "fresh Maiorana--McFarland"), "kloos": ("#7f7f7f", "^", "fixed Kloosterman")}
+    for fam, pts in qstar.items():
+        pts = sorted(pts); Ns = [1 << n for n, _, _ in pts]
+        qi = [q for _, _, q in pts]; qs_ = [q for _, q, _ in pts]
+        ax.plot([N_ for N_, q in zip(Ns, qi) if np.isfinite(q)], [q for q in qi if np.isfinite(q)], "-" + FC[fam][1], ms=4, color=FC[fam][0], label=FC[fam][2] + " (interpolated)")
+        ax.plot([N_ for N_, q in zip(Ns, qs_) if np.isfinite(q)], [q for q in qs_ if np.isfinite(q)], FC[fam][1], ms=7, mfc="none", color=FC[fam][0], lw=0)
+        for N_, q in zip(Ns, qi):
+            if not np.isfinite(q):
+                ax.annotate("", xy=(N_, 3.5e4), xytext=(N_, 2e4), arrowprops=dict(arrowstyle="->", color=FC[fam][0], lw=0.8))
+    Nn = np.array([1e3, 2e6]); ax.plot(Nn, 2 * np.sqrt(100 * Nn / (1 - 0.8 ** 2)), "k--", lw=0.7, label="$2\\sqrt{mN/(1-\\Phi^2)}$, $m{=}100$, $\\Phi{=}0.8$")
+    ax.set_xscale("log"); ax.set_yscale("log"); ax.set_xlim(5e2, 2e6); ax.set_ylim(1e2, 5e4)
+    ax.set_xlabel("$N=2^n$"); ax.set_ylabel("classical queries matching\nquantum at 200 queries")
+    ax.legend(frameon=False, loc="upper left", handletextpad=0.2, borderpad=0.2, fontsize=5)
+    note("query_crossover_by_family", {fam: [dict(n=n, Q_star_grid=(None if np.isinf(a_) else a_), Q_star_interp=(None if np.isinf(b_) else round(float(b_)))) for n, a_, b_ in sorted(pts)] for fam, pts in qstar.items()}, "results/baselines.json " + SQRTN_KEY + " medians vs quantum m=100 (map.jsonl); grid = first Q in {20,200,2000,20000} with median <= quantum; interp = log-log interpolation")
+    for ax, p in zip(axes, "abcdef"):
         ax.text(-0.3, 1.05, f"({p})", transform=ax.transAxes, fontsize=9, fontweight="bold")
     fig.savefig(os.path.join(OUT, "fig4_forrelation.pdf"))
     plt.close(fig)
@@ -561,3 +587,53 @@ if os.path.exists(mf_path):
 note("review_numbers", rev, "recomputed after the adversarial panel; sources: results/map.jsonl, baselines.json, tune_qkerr.json, kerr_twin.json, forr_knownf.json, tune_meanfield.json")
 json.dump(numbers, open(os.path.join(OUT, "numbers.json"), "w"), indent=1, default=float)
 print(json.dumps(rev, indent=1, default=str)[:6000])
+
+# ------------------------------------------------------------------ settings-charged shot budget (appendix check requested by the review panel)
+# Measurement settings per step: xyz spin readouts need 3 bases; Gaussian covariance readouts need x and p homodyne (2, cross
+# moments not charged); CV Kerr readouts <x>,<p>,<n> need 3 (two homodyne settings and photon counting); Fock joint-number
+# readouts, z/zz readouts, online weak and one-bit readouts need 1. Time multiplexing V > 1 with projective readout needs V
+# separate runs. Charged shot-ops = S * W * settings * V; the budget 3e5 then allows S_c = 3e5 / (W * settings * V).
+import re as _re
+
+
+def settings_of(c):
+    if c.startswith("forr"):
+        return 1
+    if c.startswith("cv_gauss"):
+        return 2
+    if c.startswith("qkerr") or c.startswith("cv_kerr") or ("cv2" in c and "moments" in c):
+        return 3
+    if "xyz" in c:
+        return 3
+    return 1
+
+
+def V_of(c):
+    m = _re.search(r"_V(\d+)", c)
+    return int(m.group(1)) if m else 1
+
+
+def q_at(curve, S):
+    """log-log interpolation of the shot curve at shot count S (clipped to the simulated grid)."""
+    xs = np.array([1e2, 1e3, 1e4, 1e5, 1e6]); ys = np.array([curve[k] for k in SHOTS])
+    S = float(np.clip(S, xs[0], xs[-1]))
+    return float(10 ** np.interp(np.log10(S), np.log10(xs), np.log10(ys)))
+
+
+charged = defaultdict(list); charged_acc = defaultdict(list); fam_budget = {}
+for (c, t), a in agg.items():
+    Wc = W_of(c) * settings_of(c) * V_of(c)
+    Sc = BUDGET / Wc
+    ds = cells[(c, t)]
+    qb = float(np.median([q_at(d["curve"], Sc) for d in ds]))
+    a["q_budget_charged"] = qb; a["S_charged"] = Sc
+    f = family(c); charged[f].append(qb / a["q"])
+    if a["q"] < 1e-2:
+        charged_acc[f].append(qb / a["q"])
+    fam_budget.setdefault(f, set()).add(Sc)
+chg = {f: dict(n_pairs=len(v), median=round(float(np.median(v)), 2), p90=round(float(np.percentile(v, 90)), 1), max=round(float(max(v)), 1),
+               accurate_cells_median=(round(float(np.median(charged_acc[f])), 1) if charged_acc[f] else None), accurate_n=len(charged_acc[f]),
+               S_at_budget=sorted(fam_budget[f])) for f, v in charged.items()}
+note("shot_degradation_settings_charged", chg, "results/map.jsonl curves, log-log interpolated at S = 3e5/(W*settings*V); settings: xyz 3, Gaussian 2, CV Kerr 3, Fock/z/zz/weak/1-bit 1")
+json.dump(numbers, open(os.path.join(OUT, "numbers.json"), "w"), indent=1, default=float)
+print(json.dumps(chg, indent=1))

@@ -142,3 +142,12 @@ def test_fresh_random_forrelation_stream():
     assert np.isnan(classical_estimates(t, "wb", 200, rng)).all()
     est = classical_estimates(t, "pairs", 2000, rng)
     assert np.isfinite(est).all() and abs(np.mean(est - t["phi"])) < 0.1
+
+
+def test_mm_pair_is_exact_dual_and_not_quadratic():
+    from qrcfit.forrelation import mm_pair, phi_all_translations, is_quadratic
+    from qrcfit.tasks import forrelation_mm_stream
+    f, g = mm_pair(10, 7); ph = phi_all_translations(f, g)
+    assert abs(ph[0] - 1) < 1e-9 and np.abs(ph[1:]).max() < 0.3 and not is_quadratic(f, 10)
+    t = forrelation_mm_stream(10, T_train=40, T_test=20)
+    assert abs(t["phi_yes"] - 1) < 1e-9 and t["family"] == "mm"

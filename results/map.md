@@ -1,6 +1,6 @@
 # QRC vs tuned classical: map
 
-3147 cells, 57 quantum configs × 41 tasks, seeds per cell = 3–10.
+3411 cells, 57 quantum configs × 45 tasks, seeds per cell = 3–10.
 
 All win criteria are recomputed here from the raw curves, so definitions can be changed post hoc.
   q        : NMSE of the quantum reservoir with exact expectations (S = inf)
@@ -90,9 +90,9 @@ Colour = log10(q / cls) (left) and log10(q / eqW) (right); blue = quantum more a
 | cv_kerr_chi0.3 | xor | 4 | 0.954 | 0.953 | 4.38e-25 (polynarx:(20, 2)) | 0.831 (esn:3) | — | — | 30 | 3 |  |  |  |  |
 | cv_kerr_chi0.3 | xor_n1 | 4 | 0.954 | 0.954 | 0.00101 (kerr_delay:100) | 0.843 (esn:3) | — | — | 30 | 3 |  |  |  |  |
 | cv_kerr_chi0.3 | xor_n5 | 4 | 0.959 | 0.958 | 0.023 (kerr_delay:100) | 0.887 (esn:3) | — | — | 30 | 3 |  |  |  |  |
-| cv_kerr_chi0.3 | xprod | 4 | 0.98 | 0.979 | 6.6e-24 (polynarx:(10, 2)) | 0.992 (esn:3) | 1e+02 | — | 30 | 5 |  | y |  |  |
-| cv_kerr_chi0.3 | xprod_n1 | 4 | 0.98 | 0.979 | 0.00248 (polynarx:(10, 2)) | 0.992 (esn:3) | 1e+02 | — | 30 | 5 |  | y |  |  |
-| cv_kerr_chi0.3 | xprod_n5 | 4 | 0.982 | 0.981 | 0.0592 (polynarx:(10, 2)) | 0.993 (esn:3) | 1e+02 | — | 30 | 5 |  | y |  |  |
+| cv_kerr_chi0.3 | xprod | 4 | 0.979 | 0.978 | 6.18e-24 (polynarx:(10, 2)) | 0.986 (esn:3) | 1e+02 | — | 30 | 5 |  |  |  |  |
+| cv_kerr_chi0.3 | xprod_n1 | 4 | 0.979 | 0.979 | 0.00261 (polynarx:(10, 2)) | 0.986 (esn:3) | 1e+02 | — | 30 | 5 |  |  |  |  |
+| cv_kerr_chi0.3 | xprod_n5 | 4 | 0.98 | 0.981 | 0.0633 (polynarx:(10, 2)) | 0.986 (esn:3) | 1e+02 | — | 30 | 5 |  |  |  |  |
 | cv_kerr_chi1_V4 | lorenz_multi | 16 | 0.405 | 0.511 | 4.22e-06 (esn:1000) | 0.0501 (polynarx:(5, 1)) | — | — | 30 | 3 |  |  |  |  |
 | cv_kerr_chi1_V4 | lorenz_uni | 16 | 0.385 | 0.507 | 0.000172 (esn:300) | 0.084 (esn:10) | — | — | 30 | 3 |  |  |  |  |
 | cv_kerr_chi1_V4 | mc30 | 16 | 0.946 | 0.948 | 1.5e-07 (kerr_delay:300) | 0.713 (polynarx:(10, 1)) | — | — | 30 | 3 |  |  |  |  |
@@ -219,6 +219,10 @@ Colour = log10(q / cls) (left) and log10(q / eqW) (right); blue = quantum more a
 | forr_qrc | forr_kloos_n16 | 1 | 0.001 | 0.00106 | 0.001 (forr_full:65536) | 1.04 (forr_anf2:338) | 1e+02 | 6e+06 | 1 | >1000 |  | y |  |  |
 | forr_qrc | forr_kloos_n18 | 1 | 0.000973 | 0.00103 | 0.000973 (forr_full:262144) | 1.04 (forr_anf2:408) | 1e+02 | ∞ | 1 | >1000 |  | y |  |  |
 | forr_qrc | forr_kloos_n20 | 1 | 0.000961 | 0.00101 | 0.000961 (forr_full:1048576) | 1.01 (forr_anf2:486) | 1e+02 | ∞ | 1 | >1000 |  | y |  |  |
+| forr_qrc | forr_mm_n10 | 1 | 0.00148 | 0.00156 | 0.00148 (forr_full:1024) | 0.891 (forr_anf2:176) | 1e+02 | ∞ | 1 | >1000 |  | y |  |  |
+| forr_qrc | forr_mm_n12 | 1 | 0.00148 | 0.00156 | 0.00148 (forr_full:4096) | 0.991 (forr_anf2:222) | 1e+02 | ∞ | 1 | >1000 |  | y |  |  |
+| forr_qrc | forr_mm_n14 | 1 | 0.00148 | 0.00156 | 0.00148 (forr_full:16384) | 1.03 (forr_anf2:276) | 1e+02 | ∞ | 1 | >1000 |  | y |  |  |
+| forr_qrc | forr_mm_n16 | 1 | 0.00148 | 0.00156 | 0.00148 (forr_full:65536) | 1.03 (forr_anf2:338) | 1e+02 | ∞ | 1 | >1000 |  | y |  |  |
 | forr_qrc | forr_rand_n10 | 1 | 0.00117 | 0.00118 | 0.00117 (forr_full:1024) | 0.96 (forr_anf2:176) | 1e+02 | ∞ | 1 | >1000 |  | y |  |  |
 | forr_qrc | forr_rand_n12 | 1 | 0.000964 | 0.000993 | 0.000964 (forr_full:4096) | 1.01 (forr_anf2:222) | 1e+02 | ∞ | 1 | >1000 |  | y |  |  |
 | forr_qrc | forr_rand_n14 | 1 | 0.000829 | 0.000924 | 0.000829 (forr_full:16384) | 1.01 (forr_anf2:276) | 1e+02 | — | 1 | >1000 |  | y |  |  |
@@ -284,8 +288,8 @@ Colour = log10(q / cls) (left) and log10(q / eqW) (right); blue = quantum more a
 | qkerr_delay_D100_chi1 | xprod_n5 | 300 | 0.578 | 0.589 | 0.0592 (polynarx:(10, 2)) | 0.0592 (polynarx:(10, 2)) | — | — | 30 | 30 |  |  |  |  |
 | qkerr_delay_D100_tuned | lorenz_multi | 300 | 0.115 | 0.15 | 4.22e-06 (esn:1000) | 4.22e-06 (esn:300) | — | — | 30 | 10 |  |  |  |  |
 | qkerr_delay_D100_tuned | lorenz_uni | 300 | 0.0358 | 0.0458 | 0.000172 (esn:300) | 0.000172 (esn:300) | — | — | 30 | 30 |  |  |  |  |
-| qkerr_delay_D100_tuned | mc30 | 300 | 0.0209 | 0.0279 | 1.5e-07 (kerr_delay:300) | 3.79e-07 (kerr_delay:100) | — | — | 30 | >1000 |  |  |  |  |
-| qkerr_delay_D100_tuned | mc30_n5 | 300 | 0.0538 | 0.0609 | 0.0389 (kerr_delay:100) | 0.0389 (kerr_delay:100) | — | — | 30 | >1000 |  |  |  |  |
+| qkerr_delay_D100_tuned | mc30 | 300 | 0.026 | 0.0294 | 7.66e-07 (kerr_delay:300) | 3.29e-06 (kerr_delay:100) | — | — | 30 | >1000 |  |  |  |  |
+| qkerr_delay_D100_tuned | mc30_n5 | 300 | 0.0617 | 0.0642 | 0.0401 (kerr_delay:100) | 0.0401 (kerr_delay:100) | — | — | 30 | >1000 |  |  |  |  |
 | qkerr_delay_D100_tuned | mg10 | 300 | 0.00164 | 0.00292 | 2.77e-09 (kerr_delay:300) | 8.06e-08 (kerr_delay:100) | — | — | 30 | 30 |  |  |  |  |
 | qkerr_delay_D100_tuned | mg10_small | 300 | 0.0225 | 0.0339 | 0.00471 (kerr_delay:300) | 0.00471 (esn:300) | — | — | 30 | 30 |  |  |  |  |
 | qkerr_delay_D100_tuned | mg20 | 300 | 0.00218 | 0.00345 | 9.57e-08 (esn:1000) | 8.29e-07 (esn:300) | — | — | 30 | 30 |  |  |  |  |
@@ -293,11 +297,11 @@ Colour = log10(q / cls) (left) and log10(q / eqW) (right); blue = quantum more a
 | qkerr_delay_D100_tuned | narma10_n5 | 300 | 0.107 | 0.109 | 0.0554 (kerr_delay:100) | 0.0608 (kerr_delay:100) | — | — | 30 | 1000 |  |  |  |  |
 | qkerr_delay_D100_tuned | narma10_small | 300 | 0.477 | 0.46 | 0.143 (polynarx:(30, 1)) | 0.143 (polynarx:(30, 1)) | — | — | 30 | 10 |  |  |  |  |
 | qkerr_delay_D100_tuned | narma2 | 300 | 0.0097 | 0.0103 | 5.73e-06 (esn:1000) | 1.8e-05 (esn:300) | — | — | 30 | 30 |  |  |  |  |
-| qkerr_delay_D100_tuned | narma20 | 300 | 0.139 | 0.149 | 0.1 (kerr_delay:300) | 0.136 (kerr_delay:100) | — | — | 30 | >1000 |  |  |  |  |
+| qkerr_delay_D100_tuned | narma20 | 300 | 0.2 | 0.22 | 0.109 (kerr_delay:300) | 0.154 (kerr_delay:100) | — | — | 30 | >1000 |  |  |  |  |
 | qkerr_delay_D100_tuned | narma5 | 300 | 0.0132 | 0.0195 | 0.000111 (kerr_delay:300) | 0.000244 (kerr_delay:100) | — | — | 30 | 100 |  |  |  |  |
 | qkerr_delay_D100_tuned | xor | 300 | 0.0563 | 0.0835 | 4.38e-25 (polynarx:(20, 2)) | 4.38e-25 (polynarx:(20, 2)) | — | — | 30 | 1000 |  |  |  |  |
 | qkerr_delay_D100_tuned | xor_n1 | 300 | 0.0586 | 0.0856 | 0.00101 (kerr_delay:100) | 0.00102 (kerr_delay:100) | — | — | 30 | 1000 |  |  |  |  |
-| qkerr_delay_D100_tuned | xor_n5 | 300 | 0.0742 | 0.0956 | 0.023 (kerr_delay:100) | 0.023 (kerr_delay:100) | — | — | 30 | 1000 |  |  |  |  |
+| qkerr_delay_D100_tuned | xor_n5 | 300 | 0.0653 | 0.0879 | 0.0241 (kerr_delay:100) | 0.0241 (kerr_delay:100) | — | — | 30 | >1000 |  |  |  |  |
 | qkerr_delay_D100_tuned | xprod | 300 | 0.086 | 0.106 | 6.6e-24 (polynarx:(10, 2)) | 6.6e-24 (polynarx:(10, 2)) | — | — | 30 | 300 |  |  |  |  |
 | qkerr_delay_D100_tuned | xprod_n1 | 300 | 0.0879 | 0.108 | 0.00248 (polynarx:(10, 2)) | 0.00248 (polynarx:(10, 2)) | — | — | 30 | 300 |  |  |  |  |
 | qkerr_delay_D100_tuned | xprod_n5 | 300 | 0.143 | 0.169 | 0.0592 (polynarx:(10, 2)) | 0.0592 (polynarx:(10, 2)) | — | — | 30 | 300 |  |  |  |  |
@@ -415,7 +419,7 @@ Colour = log10(q / cls) (left) and log10(q / eqW) (right); blue = quantum more a
 | qkerr_delay_D30_tuned | xprod | 90 | 0.307 | 0.348 | 6.6e-24 (polynarx:(10, 2)) | 6.6e-24 (polynarx:(10, 2)) | — | — | 30 | 100 |  |  |  |  |
 | qkerr_delay_D30_tuned | xprod_n1 | 90 | 0.314 | 0.354 | 0.00248 (polynarx:(10, 2)) | 0.00248 (polynarx:(10, 2)) | — | — | 30 | 100 |  |  |  |  |
 | qkerr_delay_D30_tuned | xprod_n5 | 90 | 0.342 | 0.409 | 0.0592 (polynarx:(10, 2)) | 0.0592 (polynarx:(10, 2)) | — | — | 30 | 100 |  |  |  |  |
-| spin_hamenc_chain_N6_xyz_V5 | lorenz_multi | 90 | 0.000506 | 0.139 | 4.22e-06 (esn:1000) | 0.0135 (polynarx:(3, 2)) | ∞ | — | 30 | 100 |  | y |  |  |
+| spin_hamenc_chain_N6_xyz_V5 | lorenz_multi | 90 | 0.000517 | 0.141 | 7.28e-06 (esn:1000) | 0.0135 (polynarx:(3, 2)) | ∞ | — | 30 | 100 |  | y |  |  |
 | spin_hamenc_chain_N6_xyz_V5 | lorenz_uni | 90 | 0.0101 | 0.368 | 0.000172 (esn:1000) | 0.00808 (kerr_delay:30) | — | — | 30 | 100 |  |  |  |  |
 | spin_hamenc_chain_N6_xyz_V5 | mc30 | 90 | 0.955 | 1.02 | 1.5e-07 (kerr_delay:300) | 0.0345 (kerr_delay:30) | — | — | 30 | 3 |  |  |  |  |
 | spin_hamenc_chain_N6_xyz_V5 | mc30_n5 | 90 | 0.957 | 1.02 | 0.0389 (kerr_delay:100) | 0.0613 (kerr_delay:30) | — | — | 30 | 3 |  |  |  |  |
@@ -472,7 +476,7 @@ Colour = log10(q / cls) (left) and log10(q / eqW) (right); blue = quantum more a
 | spin_hamenc_rand_N6_xyz_V10_weakT_amp1 | xprod | 180 | 0.781 | 1.09 | 6.6e-24 (polynarx:(10, 2)) | 6.6e-24 (polynarx:(10, 2)) | — | — | 30 | 30 |  |  |  |  |
 | spin_hamenc_rand_N6_xyz_V10_weakT_amp1 | xprod_n1 | 180 | 0.781 | 1.09 | 0.00248 (polynarx:(10, 2)) | 0.00248 (polynarx:(10, 2)) | — | — | 30 | 30 |  |  |  |  |
 | spin_hamenc_rand_N6_xyz_V10_weakT_amp1 | xprod_n5 | 180 | 0.813 | 1.1 | 0.0592 (polynarx:(10, 2)) | 0.0592 (polynarx:(10, 2)) | — | — | 30 | 30 |  |  |  |  |
-| spin_hamenc_rand_N6_xyz_V5 | lorenz_multi | 90 | 0.000905 | 0.133 | 4.22e-06 (esn:300) | 0.0135 (esn:30) | ∞ | — | 30 | 100 |  | y |  |  |
+| spin_hamenc_rand_N6_xyz_V5 | lorenz_multi | 90 | 0.000861 | 0.149 | 7.28e-06 (esn:300) | 0.0135 (esn:30) | ∞ | — | 30 | 100 |  | y |  |  |
 | spin_hamenc_rand_N6_xyz_V5 | lorenz_uni | 90 | 0.00516 | 0.365 | 0.000172 (esn:300) | 0.00808 (esn:30) | ∞ | — | 30 | 100 |  |  |  |  |
 | spin_hamenc_rand_N6_xyz_V5 | mc30 | 90 | 0.957 | 0.988 | 1.5e-07 (kerr_delay:300) | 0.0345 (kerr_delay:30) | — | — | 30 | 3 |  |  |  |  |
 | spin_hamenc_rand_N6_xyz_V5 | mc30_n5 | 90 | 0.959 | 0.99 | 0.0389 (kerr_delay:100) | 0.0613 (kerr_delay:30) | — | — | 30 | 3 |  |  |  |  |
@@ -532,8 +536,8 @@ Colour = log10(q / cls) (left) and log10(q / eqW) (right); blue = quantum more a
 | spin_qin_rand_N6_zz_weak0.3 | qin_local_S | 21 | 0.943 | 0.978 | 0.0922 (polynarx:(3, 2)) | 0.816 (esn:3) | — | — | 1 | 5 |  |  |  |  |
 | spin_reset_chain_N4_z | lorenz_multi | 4 | 0.484 | 0.696 | 4.22e-06 (esn:1000) | 0.345 (esn:3) | — | — | 30 | 3 |  |  |  |  |
 | spin_reset_chain_N4_z | lorenz_uni | 4 | 0.655 | 0.749 | 0.000172 (esn:300) | 0.304 (esn:3) | — | — | 30 | 3 |  |  |  |  |
-| spin_reset_chain_N4_z | mc30 | 4 | 0.904 | 0.907 | 1.5e-07 (kerr_delay:300) | 0.926 (esn:3) | 1e+03 | — | 30 | 5 |  | y |  |  |
-| spin_reset_chain_N4_z | mc30_n5 | 4 | 0.906 | 0.909 | 0.0389 (kerr_delay:100) | 0.928 (esn:3) | 1e+03 | — | 30 | 5 |  | y |  |  |
+| spin_reset_chain_N4_z | mc30 | 4 | 0.907 | 0.909 | 7.66e-07 (kerr_delay:300) | 0.936 (esn:3) | 1e+03 | — | 30 | 5 |  | y |  |  |
+| spin_reset_chain_N4_z | mc30_n5 | 4 | 0.909 | 0.912 | 0.0401 (kerr_delay:100) | 0.937 (esn:3) | 1e+03 | — | 30 | 5 |  | y |  |  |
 | spin_reset_chain_N4_z | mg10 | 4 | 0.317 | 0.33 | 2.77e-09 (kerr_delay:300) | 0.166 (esn:3) | — | — | 30 | 3 |  |  |  |  |
 | spin_reset_chain_N4_z | mg10_small | 4 | 0.338 | 0.352 | 0.00471 (kerr_delay:300) | 0.199 (esn:3) | — | — | 30 | 3 |  |  |  |  |
 | spin_reset_chain_N4_z | mg20 | 4 | 0.291 | 0.306 | 9.57e-08 (esn:1000) | 0.0698 (esn:3) | — | — | 30 | 3 |  |  |  |  |
@@ -541,7 +545,7 @@ Colour = log10(q / cls) (left) and log10(q / eqW) (right); blue = quantum more a
 | spin_reset_chain_N4_z | narma10_n5 | 4 | 0.526 | 0.522 | 0.0554 (kerr_delay:100) | 0.504 (esn:3) | 1e+05 | — | 30 | 5 |  |  |  |  |
 | spin_reset_chain_N4_z | narma10_small | 4 | 0.562 | 0.562 | 0.143 (polynarx:(30, 1)) | 0.683 (esn:3) | — | — | 30 | 5 |  |  |  |  |
 | spin_reset_chain_N4_z | narma2 | 4 | 0.196 | 0.197 | 5.73e-06 (esn:1000) | 0.166 (esn:3) | — | — | 30 | 3 |  |  |  |  |
-| spin_reset_chain_N4_z | narma20 | 4 | 0.581 | 0.581 | 0.1 (kerr_delay:300) | 0.607 (esn:3) | 1e+03 | — | 30 | 5 |  | y |  |  |
+| spin_reset_chain_N4_z | narma20 | 4 | 0.722 | 0.723 | 0.109 (kerr_delay:300) | 0.773 (esn:3) | 1e+03 | — | 30 | 5 |  | y |  |  |
 | spin_reset_chain_N4_z | narma5 | 4 | 0.483 | 0.481 | 0.000111 (esn:1000) | 0.454 (esn:3) | — | — | 30 | 3 |  |  |  |  |
 | spin_reset_chain_N4_z | xor | 4 | 1.01 | 1.01 | 4.38e-25 (polynarx:(20, 2)) | 0.831 (esn:3) | — | — | 30 | 3 |  |  |  |  |
 | spin_reset_chain_N4_z | xor_n1 | 4 | 1.01 | 1.01 | 0.00101 (kerr_delay:100) | 0.843 (esn:3) | — | — | 30 | 3 |  |  |  |  |
@@ -551,8 +555,8 @@ Colour = log10(q / cls) (left) and log10(q / eqW) (right); blue = quantum more a
 | spin_reset_chain_N4_z | xprod_n5 | 4 | 1.01 | 1.01 | 0.0592 (polynarx:(10, 2)) | 0.993 (esn:3) | — | — | 30 | 3 |  |  |  |  |
 | spin_reset_chain_N6_z | lorenz_multi | 6 | 0.541 | 0.603 | 4.22e-06 (esn:1000) | 0.169 (polynarx:(2, 1)) | — | — | 30 | 3 |  |  |  |  |
 | spin_reset_chain_N6_z | lorenz_uni | 6 | 0.422 | 0.546 | 0.000172 (esn:300) | 0.17 (polynarx:(5, 1)) | — | — | 30 | 3 |  |  |  |  |
-| spin_reset_chain_N6_z | mc30 | 6 | 0.839 | 0.846 | 1.5e-07 (kerr_delay:300) | 0.869 (esn:5) | 1e+04 | — | 30 | 10 |  | y |  |  |
-| spin_reset_chain_N6_z | mc30_n5 | 6 | 0.843 | 0.85 | 0.0389 (kerr_delay:100) | 0.873 (esn:5) | 1e+04 | — | 30 | 10 |  | y |  |  |
+| spin_reset_chain_N6_z | mc30 | 6 | 0.843 | 0.85 | 7.66e-07 (kerr_delay:300) | 0.871 (esn:5) | 1e+04 | — | 30 | 10 |  | y |  |  |
+| spin_reset_chain_N6_z | mc30_n5 | 6 | 0.848 | 0.855 | 0.0401 (kerr_delay:100) | 0.875 (esn:5) | 1e+04 | — | 30 | 10 |  | y |  |  |
 | spin_reset_chain_N6_z | mg10 | 6 | 0.238 | 0.283 | 2.77e-09 (kerr_delay:300) | 0.0627 (esn:5) | — | — | 30 | 3 |  |  |  |  |
 | spin_reset_chain_N6_z | mg10_small | 6 | 0.255 | 0.302 | 0.00471 (kerr_delay:300) | 0.116 (esn:5) | — | — | 30 | 3 |  |  |  |  |
 | spin_reset_chain_N6_z | mg20 | 6 | 0.267 | 0.298 | 9.57e-08 (esn:1000) | 0.0426 (esn:5) | — | — | 30 | 3 |  |  |  |  |
@@ -570,8 +574,8 @@ Colour = log10(q / cls) (left) and log10(q / eqW) (right); blue = quantum more a
 | spin_reset_chain_N6_z | xprod_n5 | 6 | 1.01 | 1.01 | 0.0592 (polynarx:(10, 2)) | 0.968 (esn:5) | — | — | 30 | 3 |  |  |  |  |
 | spin_reset_chain_N8_z | lorenz_multi | 8 | 0.601 | 0.624 | 4.22e-06 (esn:1000) | 0.169 (polynarx:(2, 1)) | — | — | 30 | 3 |  |  |  |  |
 | spin_reset_chain_N8_z | lorenz_uni | 8 | 0.451 | 0.598 | 0.000172 (esn:300) | 0.17 (polynarx:(5, 1)) | — | — | 30 | 3 |  |  |  |  |
-| spin_reset_chain_N8_z | mc30 | 8 | 0.773 | 0.784 | 1.5e-07 (kerr_delay:300) | 0.869 (esn:5) | 1e+03 | — | 30 | 30 |  | y |  |  |
-| spin_reset_chain_N8_z | mc30_n5 | 8 | 0.78 | 0.791 | 0.0389 (kerr_delay:100) | 0.873 (esn:5) | 1e+03 | — | 30 | 30 |  | y |  |  |
+| spin_reset_chain_N8_z | mc30 | 8 | 0.782 | 0.793 | 7.66e-07 (kerr_delay:300) | 0.871 (esn:5) | 1e+03 | — | 30 | 30 |  | y |  |  |
+| spin_reset_chain_N8_z | mc30_n5 | 8 | 0.787 | 0.798 | 0.0401 (kerr_delay:100) | 0.875 (esn:5) | 1e+03 | — | 30 | 30 |  | y |  |  |
 | spin_reset_chain_N8_z | mg10 | 8 | 0.257 | 0.3 | 2.77e-09 (kerr_delay:300) | 0.0627 (esn:5) | — | — | 30 | 3 |  |  |  |  |
 | spin_reset_chain_N8_z | mg10_small | 8 | 0.326 | 0.379 | 0.00471 (kerr_delay:300) | 0.116 (esn:5) | — | — | 30 | 3 |  |  |  |  |
 | spin_reset_chain_N8_z | mg20 | 8 | 0.272 | 0.296 | 9.57e-08 (esn:1000) | 0.0426 (esn:5) | — | — | 30 | 3 |  |  |  |  |
@@ -610,10 +614,10 @@ Colour = log10(q / cls) (left) and log10(q / eqW) (right); blue = quantum more a
 | spin_reset_rand_N10_zz | lorenz_uni | 55 | 0.223 | 0.763 | 0.000172 (esn:300) | 0.016 (esn:30) | — | — | 30 | 5 |  |  |  |  |
 | spin_reset_rand_N10_zz | mc30 | 55 | 0.545 | 0.973 | 1.5e-07 (kerr_delay:300) | 0.0345 (polynarx:(30, 1)) | — | — | 30 | 100 |  |  |  |  |
 | spin_reset_rand_N10_zz | mc30_n5 | 55 | 0.562 | 0.973 | 0.0389 (kerr_delay:100) | 0.0628 (polynarx:(30, 1)) | — | — | 30 | 300 |  |  |  |  |
-| spin_reset_rand_N10_zz | mg10 | 55 | 0.000761 | 0.153 | 2.77e-09 (kerr_delay:300) | 0.000807 (esn:30) | ∞ | — | 30 | 100 |  |  |  |  |
+| spin_reset_rand_N10_zz | mg10 | 55 | 0.00119 | 0.153 | 4.55e-09 (kerr_delay:300) | 0.000915 (esn:30) | — | — | 30 | 65 |  |  |  |  |
 | spin_reset_rand_N10_zz | mg10_small | 55 | 0.294 | 0.422 | 0.00471 (kerr_delay:300) | 0.011 (esn:10) | — | — | 30 | 3 |  |  |  |  |
 | spin_reset_rand_N10_zz | mg20 | 55 | 0.0012 | 0.174 | 9.57e-08 (esn:1000) | 0.000672 (esn:30) | — | — | 30 | 30 |  |  |  |  |
-| spin_reset_rand_N10_zz | narma10 | 55 | 0.174 | 0.416 | 0.0134 (kerr_delay:300) | 0.147 (polynarx:(30, 1)) | — | — | 30 | 100 |  |  |  |  |
+| spin_reset_rand_N10_zz | narma10 | 55 | 0.196 | 0.568 | 0.0157 (kerr_delay:300) | 0.144 (polynarx:(30, 1)) | — | — | 30 | 100 |  |  |  |  |
 | spin_reset_rand_N10_zz | narma10_n5 | 55 | 0.177 | 0.43 | 0.0554 (kerr_delay:100) | 0.171 (polynarx:(30, 1)) | — | — | 30 | 300 |  |  |  |  |
 | spin_reset_rand_N10_zz | narma10_small | 55 | 0.404 | 1.03 | 0.143 (polynarx:(20, 2)) | 0.278 (polynarx:(30, 1)) | — | — | 30 | 10 |  |  |  |  |
 | spin_reset_rand_N10_zz | narma2 | 55 | 0.128 | 0.416 | 5.73e-06 (esn:1000) | 0.00499 (esn:30) | — | — | 30 | 5 |  |  |  |  |
@@ -627,8 +631,8 @@ Colour = log10(q / cls) (left) and log10(q / eqW) (right); blue = quantum more a
 | spin_reset_rand_N10_zz | xprod_n5 | 55 | 0.718 | 1.05 | 0.0592 (polynarx:(10, 2)) | 0.499 (kerr_delay:10) | — | — | 30 | 30 |  |  |  |  |
 | spin_reset_rand_N4_z | lorenz_multi | 4 | 0.591 | 0.699 | 4.22e-06 (esn:1000) | 0.345 (esn:3) | — | — | 30 | 3 |  |  |  |  |
 | spin_reset_rand_N4_z | lorenz_uni | 4 | 0.62 | 0.693 | 0.000172 (esn:300) | 0.304 (esn:3) | — | — | 30 | 3 |  |  |  |  |
-| spin_reset_rand_N4_z | mc30 | 4 | 0.905 | 0.924 | 1.5e-07 (kerr_delay:300) | 0.926 (esn:3) | 1e+04 | — | 30 | 5 |  | y |  |  |
-| spin_reset_rand_N4_z | mc30_n5 | 4 | 0.907 | 0.927 | 0.0389 (kerr_delay:100) | 0.928 (esn:3) | 1e+04 | — | 30 | 5 |  | y |  |  |
+| spin_reset_rand_N4_z | mc30 | 4 | 0.915 | 0.925 | 7.66e-07 (kerr_delay:300) | 0.936 (esn:3) | 1e+04 | — | 30 | 5 |  |  |  |  |
+| spin_reset_rand_N4_z | mc30_n5 | 4 | 0.918 | 0.928 | 0.0401 (kerr_delay:100) | 0.937 (esn:3) | 1e+04 | — | 30 | 5 |  |  |  |  |
 | spin_reset_rand_N4_z | mg10 | 4 | 0.29 | 0.305 | 2.77e-09 (kerr_delay:300) | 0.166 (esn:3) | — | — | 30 | 3 |  |  |  |  |
 | spin_reset_rand_N4_z | mg10_small | 4 | 0.307 | 0.375 | 0.00471 (kerr_delay:300) | 0.199 (esn:3) | — | — | 30 | 3 |  |  |  |  |
 | spin_reset_rand_N4_z | mg20 | 4 | 0.225 | 0.304 | 9.57e-08 (esn:1000) | 0.0698 (esn:3) | — | — | 30 | 3 |  |  |  |  |
@@ -665,8 +669,8 @@ Colour = log10(q / cls) (left) and log10(q / eqW) (right); blue = quantum more a
 | spin_reset_rand_N6_xyz | xprod_n5 | 18 | 0.991 | 1.01 | 0.0592 (polynarx:(10, 2)) | 0.777 (polynarx:(3, 2)) | — | — | 30 | 3 |  |  |  |  |
 | spin_reset_rand_N6_z | lorenz_multi | 6 | 0.627 | 0.682 | 4.22e-06 (esn:1000) | 0.169 (polynarx:(2, 1)) | — | — | 30 | 3 |  |  |  |  |
 | spin_reset_rand_N6_z | lorenz_uni | 6 | 0.515 | 0.751 | 0.000172 (esn:1000) | 0.17 (esn:5) | — | — | 30 | 3 |  |  |  |  |
-| spin_reset_rand_N6_z | mc30 | 6 | 0.849 | 0.902 | 1.5e-07 (kerr_delay:300) | 0.869 (polynarx:(5, 1)) | 1e+05 | — | 30 | 10 |  | y |  |  |
-| spin_reset_rand_N6_z | mc30_n5 | 6 | 0.855 | 0.906 | 0.0389 (kerr_delay:100) | 0.873 (esn:5) | 1e+05 | — | 30 | 10 |  | y |  |  |
+| spin_reset_rand_N6_z | mc30 | 6 | 0.858 | 0.913 | 7.66e-07 (kerr_delay:300) | 0.871 (polynarx:(5, 1)) | 6e+05 | — | 30 | 10 |  |  |  |  |
+| spin_reset_rand_N6_z | mc30_n5 | 6 | 0.861 | 0.914 | 0.0401 (kerr_delay:100) | 0.875 (esn:5) | 6e+05 | — | 30 | 10 |  |  |  |  |
 | spin_reset_rand_N6_z | mg10 | 6 | 0.104 | 0.287 | 2.77e-09 (kerr_delay:300) | 0.0627 (esn:5) | — | — | 30 | 5 |  |  |  |  |
 | spin_reset_rand_N6_z | mg10_small | 6 | 0.114 | 0.313 | 0.00471 (kerr_delay:300) | 0.116 (esn:5) | — | — | 30 | 5 |  |  |  |  |
 | spin_reset_rand_N6_z | mg20 | 6 | 0.148 | 0.278 | 9.57e-08 (esn:1000) | 0.0426 (esn:5) | — | — | 30 | 3 |  |  |  |  |
@@ -741,8 +745,8 @@ Colour = log10(q / cls) (left) and log10(q / eqW) (right); blue = quantum more a
 | spin_reset_rand_N6_z_V5 | xprod_n5 | 30 | 0.869 | 1.01 | 0.0592 (polynarx:(10, 2)) | 0.499 (kerr_delay:10) | — | — | 30 | 10 |  |  |  |  |
 | spin_reset_rand_N6_z_edge | lorenz_multi | 6 | 0.627 | 0.682 | 4.22e-06 (esn:1000) | 0.169 (polynarx:(2, 1)) | — | — | 30 | 3 |  |  |  |  |
 | spin_reset_rand_N6_z_edge | lorenz_uni | 6 | 0.515 | 0.751 | 0.000172 (esn:1000) | 0.17 (esn:5) | — | — | 30 | 3 |  |  |  |  |
-| spin_reset_rand_N6_z_edge | mc30 | 6 | 0.849 | 0.902 | 1.5e-07 (kerr_delay:300) | 0.869 (polynarx:(5, 1)) | 1e+05 | — | 30 | 10 |  | y |  |  |
-| spin_reset_rand_N6_z_edge | mc30_n5 | 6 | 0.855 | 0.906 | 0.0389 (kerr_delay:100) | 0.873 (esn:5) | 1e+05 | — | 30 | 10 |  | y |  |  |
+| spin_reset_rand_N6_z_edge | mc30 | 6 | 0.858 | 0.913 | 7.66e-07 (kerr_delay:300) | 0.871 (polynarx:(5, 1)) | 6e+05 | — | 30 | 10 |  |  |  |  |
+| spin_reset_rand_N6_z_edge | mc30_n5 | 6 | 0.861 | 0.914 | 0.0401 (kerr_delay:100) | 0.875 (esn:5) | 6e+05 | — | 30 | 10 |  |  |  |  |
 | spin_reset_rand_N6_z_edge | mg10 | 6 | 0.104 | 0.287 | 2.77e-09 (kerr_delay:300) | 0.0627 (esn:5) | — | — | 30 | 5 |  |  |  |  |
 | spin_reset_rand_N6_z_edge | mg10_small | 6 | 0.114 | 0.313 | 0.00471 (esn:1000) | 0.116 (esn:5) | — | — | 30 | 5 |  |  |  |  |
 | spin_reset_rand_N6_z_edge | mg20 | 6 | 0.148 | 0.278 | 9.57e-08 (esn:1000) | 0.0426 (esn:5) | — | — | 30 | 3 |  |  |  |  |
@@ -798,8 +802,8 @@ Colour = log10(q / cls) (left) and log10(q / eqW) (right); blue = quantum more a
 | spin_reset_rand_N6_z_pm | xprod_n5 | 6 | 0.997 | 1 | 0.0592 (polynarx:(10, 2)) | 0.968 (esn:5) | — | — | 30 | 3 |  |  |  |  |
 | spin_reset_rand_N6_z_pm_slow | lorenz_multi | 6 | 0.561 | 0.7 | 4.22e-06 (esn:1000) | 0.169 (polynarx:(2, 1)) | — | — | 30 | 3 |  |  |  |  |
 | spin_reset_rand_N6_z_pm_slow | lorenz_uni | 6 | 0.625 | 0.753 | 0.000172 (esn:1000) | 0.17 (esn:5) | — | — | 30 | 3 |  |  |  |  |
-| spin_reset_rand_N6_z_pm_slow | mc30 | 6 | 0.862 | 0.949 | 1.5e-07 (kerr_delay:300) | 0.869 (esn:5) | ∞ | — | 30 | 10 |  | y |  |  |
-| spin_reset_rand_N6_z_pm_slow | mc30_n5 | 6 | 0.865 | 0.95 | 0.0389 (kerr_delay:100) | 0.873 (polynarx:(5, 1)) | ∞ | — | 30 | 10 |  | y |  |  |
+| spin_reset_rand_N6_z_pm_slow | mc30 | 6 | 0.868 | 0.953 | 7.66e-07 (kerr_delay:300) | 0.871 (esn:5) | ∞ | — | 30 | 10 |  |  |  |  |
+| spin_reset_rand_N6_z_pm_slow | mc30_n5 | 6 | 0.873 | 0.953 | 0.0401 (kerr_delay:100) | 0.875 (polynarx:(5, 1)) | ∞ | — | 30 | 10 |  |  |  |  |
 | spin_reset_rand_N6_z_pm_slow | mg10 | 6 | 0.0652 | 0.288 | 2.77e-09 (kerr_delay:300) | 0.0627 (esn:5) | — | — | 30 | 5 |  |  |  |  |
 | spin_reset_rand_N6_z_pm_slow | mg10_small | 6 | 0.195 | 0.331 | 0.00471 (kerr_delay:100) | 0.116 (esn:5) | — | — | 30 | 5 |  |  |  |  |
 | spin_reset_rand_N6_z_pm_slow | mg20 | 6 | 0.1 | 0.29 | 9.57e-08 (esn:1000) | 0.0426 (esn:5) | — | — | 30 | 3 |  |  |  |  |
@@ -971,9 +975,9 @@ Colour = log10(q / cls) (left) and log10(q / eqW) (right); blue = quantum more a
 | spin_reset_rand_N6_zz_weak0.3 | lorenz_uni | 21 | 0.16 | 0.74 | 0.000172 (esn:300) | 0.084 (esn:10) | — | — | 1 | 5 |  |  |  |  |
 | spin_reset_rand_N6_zz_weak0.3 | mc30 | 21 | 0.75 | 0.923 | 1.5e-07 (kerr_delay:300) | 0.713 (polynarx:(10, 1)) | — | — | 1 | 30 |  |  |  |  |
 | spin_reset_rand_N6_zz_weak0.3 | mc30_n5 | 21 | 0.758 | 0.926 | 0.0389 (kerr_delay:100) | 0.719 (polynarx:(10, 1)) | — | — | 1 | 30 |  |  |  |  |
-| spin_reset_rand_N6_zz_weak0.3 | mg10 | 21 | 0.0101 | 0.0889 | 2.77e-09 (kerr_delay:300) | 0.0186 (esn:10) | ∞ | — | 1 | 30 |  | y |  |  |
-| spin_reset_rand_N6_zz_weak0.3 | mg10_small | 21 | 0.015 | 0.119 | 0.00471 (esn:1000) | 0.0755 (esn:10) | ∞ | — | 1 | 30 |  | y |  |  |
-| spin_reset_rand_N6_zz_weak0.3 | mg20 | 21 | 0.00495 | 0.11 | 9.57e-08 (esn:1000) | 0.0121 (esn:10) | ∞ | — | 1 | 30 |  | y |  |  |
+| spin_reset_rand_N6_zz_weak0.3 | mg10 | 21 | 0.00963 | 0.0993 | 4.55e-09 (kerr_delay:300) | 0.0247 (esn:10) | ∞ | — | 1 | 30 |  | y |  |  |
+| spin_reset_rand_N6_zz_weak0.3 | mg10_small | 21 | 0.0125 | 0.122 | 0.00133 (esn:1000) | 0.0521 (esn:10) | ∞ | — | 1 | 65 |  | y |  |  |
+| spin_reset_rand_N6_zz_weak0.3 | mg20 | 21 | 0.00557 | 0.112 | 1e-07 (esn:1000) | 0.0118 (esn:10) | ∞ | — | 1 | 30 |  |  |  |  |
 | spin_reset_rand_N6_zz_weak0.3 | narma10 | 21 | 0.294 | 0.47 | 0.0134 (kerr_delay:300) | 0.282 (esn:10) | ∞ | — | 1 | 100 |  |  |  |  |
 | spin_reset_rand_N6_zz_weak0.3 | narma10_n5 | 21 | 0.308 | 0.488 | 0.0554 (kerr_delay:100) | 0.288 (esn:5) | ∞ | — | 1 | 100 |  |  |  |  |
 | spin_reset_rand_N6_zz_weak0.3 | narma10_small | 21 | 0.451 | 0.701 | 0.143 (polynarx:(30, 1)) | 0.385 (esn:10) | — | — | 1 | 10 |  |  |  |  |
@@ -982,7 +986,7 @@ Colour = log10(q / cls) (left) and log10(q / eqW) (right); blue = quantum more a
 | spin_reset_rand_N6_zz_weak0.3 | narma5 | 21 | 0.218 | 0.443 | 0.000111 (kerr_delay:300) | 0.138 (polynarx:(10, 1)) | — | — | 1 | 30 |  |  |  |  |
 | spin_reset_rand_N6_zz_weak0.3 | xor | 21 | 0.512 | 0.671 | 4.38e-25 (polynarx:(20, 2)) | 0.508 (polynarx:(5, 2)) | — | — | 1 | 30 |  |  |  |  |
 | spin_reset_rand_N6_zz_weak0.3 | xor_n1 | 21 | 0.513 | 0.673 | 0.00101 (kerr_delay:100) | 0.507 (polynarx:(5, 2)) | — | — | 1 | 30 |  |  |  |  |
-| spin_reset_rand_N6_zz_weak0.3 | xor_n5 | 21 | 0.516 | 0.685 | 0.023 (kerr_delay:100) | 0.516 (polynarx:(5, 2)) | ∞ | — | 1 | 30 |  | y |  |  |
+| spin_reset_rand_N6_zz_weak0.3 | xor_n5 | 21 | 0.517 | 0.679 | 0.0241 (kerr_delay:100) | 0.52 (polynarx:(5, 2)) | ∞ | — | 1 | 30 |  |  |  |  |
 | spin_reset_rand_N6_zz_weak0.3 | xprod | 21 | 0.865 | 0.996 | 6.6e-24 (polynarx:(10, 2)) | 0.518 (polynarx:(5, 2)) | — | — | 1 | 10 |  |  |  |  |
 | spin_reset_rand_N6_zz_weak0.3 | xprod_n1 | 21 | 0.866 | 0.996 | 0.00248 (polynarx:(10, 2)) | 0.519 (polynarx:(5, 2)) | — | — | 1 | 10 |  |  |  |  |
 | spin_reset_rand_N6_zz_weak0.3 | xprod_n5 | 21 | 0.874 | 0.997 | 0.0592 (polynarx:(10, 2)) | 0.546 (polynarx:(5, 2)) | — | — | 1 | 10 |  |  |  |  |
@@ -990,8 +994,8 @@ Colour = log10(q / cls) (left) and log10(q / eqW) (right); blue = quantum more a
 | spin_reset_rand_N6_zz_weak0.6 | lorenz_uni | 21 | 0.16 | 0.718 | 0.000172 (esn:300) | 0.084 (esn:10) | — | — | 1 | 10 |  |  |  |  |
 | spin_reset_rand_N6_zz_weak0.6 | mc30 | 21 | 0.798 | 0.922 | 1.5e-07 (kerr_delay:300) | 0.713 (polynarx:(10, 1)) | — | — | 1 | 10 |  |  |  |  |
 | spin_reset_rand_N6_zz_weak0.6 | mc30_n5 | 21 | 0.804 | 0.924 | 0.0389 (kerr_delay:100) | 0.719 (polynarx:(10, 1)) | — | — | 1 | 10 |  |  |  |  |
-| spin_reset_rand_N6_zz_weak0.6 | mg10 | 21 | 0.0112 | 0.0883 | 2.77e-09 (kerr_delay:300) | 0.0186 (esn:10) | ∞ | — | 1 | 30 |  | y |  |  |
-| spin_reset_rand_N6_zz_weak0.6 | mg10_small | 21 | 0.0235 | 0.112 | 0.00471 (kerr_delay:300) | 0.0755 (esn:10) | ∞ | — | 1 | 30 |  | y |  |  |
+| spin_reset_rand_N6_zz_weak0.6 | mg10 | 21 | 0.01 | 0.0888 | 4.55e-09 (kerr_delay:300) | 0.0247 (esn:10) | ∞ | — | 1 | 30 |  | y |  |  |
+| spin_reset_rand_N6_zz_weak0.6 | mg10_small | 21 | 0.0189 | 0.113 | 0.00133 (kerr_delay:300) | 0.0521 (esn:10) | ∞ | — | 1 | 65 |  | y |  |  |
 | spin_reset_rand_N6_zz_weak0.6 | mg20 | 21 | 0.00477 | 0.0745 | 9.57e-08 (esn:1000) | 0.0121 (esn:10) | ∞ | — | 1 | 30 |  |  |  |  |
 | spin_reset_rand_N6_zz_weak0.6 | narma10 | 21 | 0.315 | 0.468 | 0.0134 (kerr_delay:300) | 0.282 (esn:10) | — | — | 1 | 10 |  |  |  |  |
 | spin_reset_rand_N6_zz_weak0.6 | narma10_n5 | 21 | 0.327 | 0.473 | 0.0554 (kerr_delay:100) | 0.288 (esn:10) | — | — | 1 | 10 |  |  |  |  |
@@ -1027,29 +1031,25 @@ Colour = log10(q / cls) (left) and log10(q / eqW) (right); blue = quantum more a
 
 ## Wins by axis
 
-- **A: accuracy vs best classical (any size), all seeds:** 0/1007 cells
-- **a: accuracy vs equal-readout-cost classical, all seeds:** 51/1007 cells
-  - cv_kerr_chi0.3: xprod, xprod_n1, xprod_n5
-  - forr_qrc: forr_kloos_n10, forr_kloos_n12, forr_kloos_n14, forr_kloos_n16, forr_kloos_n18, forr_kloos_n20, forr_rand_n10, forr_rand_n12, forr_rand_n14, forr_rand_n16, forr_rand_n18, forr_rand_n20
+- **A: accuracy vs best classical (any size), all seeds:** 0/1011 cells
+- **a: accuracy vs equal-readout-cost classical, all seeds:** 42/1011 cells
+  - forr_qrc: forr_kloos_n10, forr_kloos_n12, forr_kloos_n14, forr_kloos_n16, forr_kloos_n18, forr_kloos_n20, forr_mm_n10, forr_mm_n12, forr_mm_n14, forr_mm_n16, forr_rand_n10, forr_rand_n12, forr_rand_n14, forr_rand_n16, forr_rand_n18, forr_rand_n20
   - spin_hamenc_chain_N6_xyz_V5: lorenz_multi
   - spin_hamenc_rand_N6_xyz_V5: lorenz_multi
   - spin_reset_chain_N4_z: mc30, mc30_n5, narma20
   - spin_reset_chain_N6_z: mc30, mc30_n5
   - spin_reset_chain_N8_z: mc30, mc30_n5
-  - spin_reset_rand_N4_z: mc30, mc30_n5, narma5
-  - spin_reset_rand_N6_z: mc30, mc30_n5
-  - spin_reset_rand_N6_z_edge: mc30, mc30_n5
-  - spin_reset_rand_N6_z_pm_slow: mc30, mc30_n5
+  - spin_reset_rand_N4_z: narma5
   - spin_reset_rand_N6_z_weak0.1: mc30, mc30_n5
   - spin_reset_rand_N6_z_weak0.3: mc30, mc30_n5
   - spin_reset_rand_N6_zz: mg10
   - spin_reset_rand_N6_zz_pm: mg10, mg20
   - spin_reset_rand_N6_zz_weak0.1: mg10
-  - spin_reset_rand_N6_zz_weak0.3: mg10, mg10_small, mg20, xor_n5
+  - spin_reset_rand_N6_zz_weak0.3: mg10, mg10_small
   - spin_reset_rand_N6_zz_weak0.6: mg10, mg10_small
   - spin_reset_rand_N8_z: mc30, mc30_n5, narma10, narma10_n5
-- **★ scale win:** 0/1007 cells
-- **◆ both (A and S*_cls × W ≤ 3e5):** 0/1007 cells
+- **★ scale win:** 0/1011 cells
+- **◆ both (A and S*_cls × W ≤ 3e5):** 0/1011 cells
 
 ## Best quantum config per task (median over seeds)
 
@@ -1067,16 +1067,20 @@ Colour = log10(q / cls) (left) and log10(q / eqW) (right); blue = quantum more a
 | forr_kloos_n16 | forr_qrc (1) | 0.001 | 0.001 (forr_full:65536) | 1 | 1.04 | 0.00097 |
 | forr_kloos_n18 | forr_qrc (1) | 0.000973 | 0.000973 (forr_full:262144) | 1 | 1.04 | 0.00094 |
 | forr_kloos_n20 | forr_qrc (1) | 0.000961 | 0.000961 (forr_full:1048576) | 1 | 1.01 | 0.00095 |
+| forr_mm_n10 | forr_qrc (1) | 0.00148 | 0.00148 (forr_full:1024) | 1 | 0.891 | 0.0017 |
+| forr_mm_n12 | forr_qrc (1) | 0.00148 | 0.00148 (forr_full:4096) | 1 | 0.991 | 0.0015 |
+| forr_mm_n14 | forr_qrc (1) | 0.00148 | 0.00148 (forr_full:16384) | 1 | 1.03 | 0.0014 |
+| forr_mm_n16 | forr_qrc (1) | 0.00148 | 0.00148 (forr_full:65536) | 1 | 1.03 | 0.0014 |
 | forr_rand_n10 | forr_qrc (1) | 0.00117 | 0.00117 (forr_full:1024) | 1 | 0.96 | 0.0012 |
 | forr_rand_n12 | forr_qrc (1) | 0.000964 | 0.000964 (forr_full:4096) | 1 | 1.01 | 0.00095 |
 | forr_rand_n14 | forr_qrc (1) | 0.000829 | 0.000829 (forr_full:16384) | 1 | 1.01 | 0.00082 |
 | forr_rand_n16 | forr_qrc (1) | 0.000861 | 0.000861 (forr_full:65536) | 1 | 1.01 | 0.00085 |
 | forr_rand_n18 | forr_qrc (1) | 0.000858 | 0.000858 (forr_full:262144) | 1 | 1.03 | 0.00083 |
 | forr_rand_n20 | forr_qrc (1) | 0.00083 | 0.00083 (forr_full:1048576) | 1 | 1.02 | 0.00081 |
-| lorenz_multi | spin_hamenc_chain_N6_xyz_V5 (90) | 0.000506 | 4.22e-06 (esn:1000) | 1.2e+02 | 0.0135 | 0.037 |
+| lorenz_multi | spin_hamenc_chain_N6_xyz_V5 (90) | 0.000517 | 7.28e-06 (esn:1000) | 71 | 0.0135 | 0.038 |
 | lorenz_uni | spin_hamenc_rand_N6_xyz_V5 (90) | 0.00516 | 0.000172 (esn:300) | 30 | 0.00808 | 0.64 |
-| mc30 | qkerr_delay_D100_tuned (300) | 0.0209 | 1.5e-07 (kerr_delay:300) | 1.4e+05 | 3.79e-07 | 5.5e+04 |
-| mc30_n5 | qkerr_delay_D100_tuned (300) | 0.0538 | 0.0389 (kerr_delay:100) | 1.4 | 0.0389 | 1.4 |
+| mc30 | qkerr_delay_D100_tuned (300) | 0.026 | 7.66e-07 (kerr_delay:300) | 3.4e+04 | 3.29e-06 | 7.9e+03 |
+| mc30_n5 | qkerr_delay_D100_chi0 (300) | 0.0579 | 0.0389 (kerr_delay:100) | 1.5 | 0.0389 | 1.5 |
 | mg10 | spin_reset_rand_N6_zz_V10 (210) | 6.29e-05 | 2.77e-09 (kerr_delay:300) | 2.3e+04 | 4.15e-06 | 15 |
 | mg10_small | qkerr_delay_D100_chi0.3 (300) | 0.00905 | 0.00471 (kerr_delay:300) | 1.9 | 0.00471 | 1.9 |
 | mg20 | spin_reset_rand_N6_zz_V10 (210) | 0.000116 | 9.57e-08 (esn:1000) | 1.2e+03 | 2.26e-05 | 5.1 |

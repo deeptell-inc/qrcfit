@@ -17,3 +17,5 @@ paper/mainNotes.bib
 paper/
 dist/
 submission.json
+results/baselines.json.lock
+results/baselines.json.tmp

@@ -27,6 +27,18 @@ BASE_CACHE = os.path.join(ROOT, "baselines.json")
 OUT = os.path.join(ROOT, "map.jsonl")
 
 
+def _save_baselines(base):
+    """Merge-with-disk under a file lock so that concurrent run_map processes cannot drop each other's entries."""
+    import fcntl
+    with open(BASE_CACHE + ".lock", "w") as lk:
+        fcntl.flock(lk, fcntl.LOCK_EX)
+        on_disk = json.load(open(BASE_CACHE)) if os.path.exists(BASE_CACHE) else {}
+        on_disk.update(base); base.update(on_disk)
+        tmp = BASE_CACHE + ".tmp"
+        json.dump(on_disk, open(tmp, "w")); os.replace(tmp, BASE_CACHE)
+        fcntl.flock(lk, fcntl.LOCK_UN)
+
+
 def baseline_job(tname, seed, quick):
     task = get_task(tname, seed, quick)
     t0 = time.time()
@@ -88,6 +100,7 @@ def main():
     ap.add_argument("--workers", type=int, default=max(1, os.cpu_count() - 2))
     ap.add_argument("--configs", nargs="*", default=None)
     ap.add_argument("--tasks", nargs="*", default=None)
+    ap.add_argument("--pairs", nargs="*", default=None, help="restrict to exact config:task pairs")
     a = ap.parse_args()
     tasks = list(all_tasks(0, a.quick)) if not a.tasks else list(a.tasks)
     if a.tasks:
@@ -95,6 +108,10 @@ def main():
     configs = list(quantum_configs(a.quick))
     if a.configs:
         configs = [c for c in configs if c in a.configs]
+    pairs = None
+    if a.pairs:
+        pairs = {tuple(x.split(":")) for x in a.pairs}
+        configs = sorted({c for c, _ in pairs}); tasks = sorted({t for _, t in pairs})
     seeds = list(range(a.seeds))
 
     base = json.load(open(BASE_CACHE)) if os.path.exists(BASE_CACHE) else {}
@@ -107,11 +124,11 @@ def main():
         futs = [ex.submit(baseline_job, t, s, a.quick) for t in tasks for s in seeds if f"{t}|{s}" not in base]
         for f in as_completed(futs):
             t, s, b, dt = f.result(); base[f"{t}|{s}"] = b
-            json.dump(base, open(BASE_CACHE, "w"))
+            _save_baselines(base)
             print(f"[baseline] {t} seed{s} {dt:.0f}s best={min(v['nmse'] for v in b.values()):.3g}", flush=True)
         allt = None  # compatibility is decided from names (no suite build needed)
         futs = [ex.submit(quantum_job, c, t, s, a.quick) for c in configs for t in tasks for s in seeds
-                if (c, t, s) not in done and _compat(c, t, allt)]
+                if (c, t, s) not in done and _compat(c, t, allt) and (pairs is None or (c, t) in pairs)]
         with open(OUT, "a") as fo:
             for f in as_completed(futs):
                 cell = f.result()
