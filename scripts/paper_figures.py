@@ -400,7 +400,7 @@ if HAVE_FORR:
     Nn = np.array([1e3, 2e6]); ax.plot(Nn, 2 * np.sqrt(100 * Nn / (1 - 0.8 ** 2)), "k--", lw=0.7, label="$2\\sqrt{mN/(1-\\Phi^2)}$, $m{=}100$, $\\Phi{=}0.8$")
     ax.set_xscale("log"); ax.set_yscale("log"); ax.set_xlim(5e2, 2e6); ax.set_ylim(1e2, 5e4)
     ax.set_xlabel("$N=2^n$"); ax.set_ylabel("classical queries matching\nquantum at 200 queries")
-    ax.legend(frameon=False, loc="upper left", handletextpad=0.2, borderpad=0.2, fontsize=5)
+    ax.legend(frameon=False, loc="lower right", handletextpad=0.2, borderpad=0.2, fontsize=5)
     note("query_crossover_by_family", {fam: [dict(n=n, Q_star_grid=(None if np.isinf(a_) else a_), Q_star_interp=(None if np.isinf(b_) else round(float(b_)))) for n, a_, b_ in sorted(pts)] for fam, pts in qstar.items()}, "results/baselines.json " + SQRTN_KEY + " medians vs quantum m=100 (map.jsonl); grid = first Q in {20,200,2000,20000} with median <= quantum; interp = log-log interpolation")
     for ax, p in zip(axes, "abcdef"):
         ax.text(-0.3, 1.05, f"({p})", transform=ax.transAxes, fontsize=9, fontweight="bold")
