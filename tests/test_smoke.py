@@ -151,3 +151,22 @@ def test_mm_pair_is_exact_dual_and_not_quadratic():
     assert abs(ph[0] - 1) < 1e-9 and np.abs(ph[1:]).max() < 0.3 and not is_quadratic(f, 10)
     t = forrelation_mm_stream(10, T_train=40, T_test=20)
     assert abs(t["phi_yes"] - 1) < 1e-9 and t["family"] == "mm"
+
+
+def test_affine_masking_keeps_phi_and_hides_block_structure():
+    from qrcfit.forrelation import mm_pair, masked_pair, phi_all_translations, random_gl2, apply_gl2, _gf2_inverse
+    rng = np.random.default_rng(5)
+    A, Ainv = random_gl2(8, rng)
+    z = np.arange(256)
+    assert np.array_equal(apply_gl2(Ainv, apply_gl2(A, z)), z)         # A^{-1} A = I
+    f, g = mm_pair(10, 3); fm, gm = masked_pair(f, g, 10, rng)
+    assert abs(phi_all_translations(fm, gm)[0] - 1) < 1e-9             # Phi(f o A, g o A^{-T}) = Phi(f, g) = 1
+    # unmasked: f(x, y=0) is affine in x (the leak the attack uses); masked: restriction to the first block is not
+    k = 5; x = np.arange(1 << k)
+    row = ((1 - f[x]) // 2).astype(int); lin = row ^ row[0]
+    assert all(lin[a ^ b] == (lin[a] ^ lin[b]) for a in x for b in x)  # affine on the unmasked block
+    rowm = ((1 - fm[x]) // 2).astype(int); linm = rowm ^ rowm[0]
+    assert not all(linm[a ^ b] == (linm[a] ^ linm[b]) for a in x for b in x)
+    from qrcfit.tasks import forrelation_mm_stream
+    t = forrelation_mm_stream(10, T_train=30, T_test=20, masked=True)
+    assert t["name"] == "forr_mmx_n10" and abs(t["phi_yes"] - 1) < 1e-9

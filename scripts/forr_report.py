@@ -16,7 +16,7 @@ base = json.load(open(os.path.join(ROOT, "baselines.json")))
 tasks = sorted({r["task"] for r in rows}, key=lambda t: (t.split("_")[0] != "forr", t.split("_")[1], int(t.split("_n")[1])))
 M = [1e2, 1e3, 1e4]
 L = ["# Wave 4: Forrelation oracle-input tasks — matched query budgets", "",
-     "quantum(m) = NMSE with m shots/step (2m queries). classical(Q) = naive / pairs (implemented √N-query all-pairs estimator) at Q queries; anf2 = degree-2 ANF attack at its own query count. All with the same tuned readout. Medians over 3 seeds; ✚ = query win in every seed (quantum at 2m queries beats every classical with ≤ 20m queries).", "",
+     "quantum(m) = NMSE with m shots/step (2m queries). classical(Q) = naive / pairs (implemented √N-query all-pairs estimator) at Q queries; anf2 = degree-2 ANF attack at its own query count. All with the same tuned readout. Medians over the seeds listed per row; ✚ = query win in every seed (quantum at 2m queries beats every classical with ≤ 20m queries).", "",
      "| task | N | Φ_YES | seeds | quantum m=1e2 [IQR] / 1e3 / 1e4 / ∞ | classical Q=200 naive/pairs | Q=2000 naive/pairs | Q=20000 naive/pairs [IQR] | anf2 (Q) or white-box Q=200/2000/20000 | full-info (Q=N, same readout) | ✚ |", "|---|---|---|---|---|---|---|---|---|---|---|"]
 summary = {}
 for t in tasks:
@@ -28,7 +28,7 @@ for t in tasks:
         phi_yes = forrelation_random_stream(n, T_train=20, T_test=10)["phi_yes"]
     elif t.startswith("forr_mm"):
         from qrcfit.tasks import forrelation_mm_stream
-        phi_yes = forrelation_mm_stream(n, T_train=20, T_test=10)["phi_yes"]
+        phi_yes = forrelation_mm_stream(n, T_train=20, T_test=10, masked=t.startswith("forr_mmx"))["phi_yes"]
     else:
         phi_yes = (drift_stream(n, T_train=10, T_test=10) if t.startswith("drift") else forrelation_stream(n, fam, T_train=10, T_test=10))["phi_yes"]
     q = {m: np.median([r["curve"][f"{m:.0e}"] for r in rs]) for m in M}; qinf = np.median([r["curve"]["inf"] for r in rs])

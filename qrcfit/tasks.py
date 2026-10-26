@@ -202,13 +202,13 @@ def forrelation_random_stream(n=12, T_train=1000, T_test=500, seed=0, p_switch=0
     return out
 
 
-def forrelation_mm_stream(n=12, T_train=1000, T_test=500, seed=0, p_switch=0.1):
+def forrelation_mm_stream(n=12, T_train=1000, T_test=500, seed=0, p_switch=0.1, masked=False):
     """Fresh Maiorana–McFarland pair at every step (n even, n = 2k): f_t(x,y) = (-1)^{x.pi_t(y) + h_t(y)} with a
     uniformly random permutation pi_t of {0,1}^k and random h_t; its exact dual is
     g_t(a,b) = (-1)^{b.pi_t^{-1}(a) + h_t(pi_t^{-1}(a))} (Phi = 1 exactly, `phi_mm` in the bqp Lean project).
     NO steps translate g_t by random e != 0. Black-box classical hardness of MM pairs reduces to one-way
     functions (Girish–Servedio); algebraic degree of a random pi makes the degree-2 ANF attack fail."""
-    from .forrelation import fwht, mm_pair
+    from .forrelation import fwht, mm_pair, masked_pair
     rng = np.random.default_rng(seed)
     N = 1 << n
     T = WASHOUT + T_train + T_test
@@ -220,13 +220,15 @@ def forrelation_mm_stream(n=12, T_train=1000, T_test=500, seed=0, p_switch=0.1):
     phi = np.zeros(T)
     for t in range(T):
         f, g = mm_pair(n, int(fseed[t]))
+        if masked:  # fresh A in GL_n(F2) applied jointly: (f o A, g o A^{-T}); hides the block structure
+            f, g = masked_pair(f, g, n, np.random.default_rng(int(fseed[t]) ^ 0x5A5A))
         phi[t] = float(np.dot(g[np.arange(N) ^ int(e[t])], fwht(f)) / N ** 1.5)
     uu = (1 + phi) / 8
     yn = np.zeros(T)
     for t in range(10, T - 1):
         yn[t + 1] = 0.3 * yn[t] + 0.05 * yn[t] * yn[t - 9:t + 1].sum() + 1.5 * uu[t - 9] * uu[t] + 0.1
-    out = _pack(f"forr_mm_n{n}", phi, np.stack([phi, h.astype(float), yn], 1), T_train, T_test)
-    out.update(fseed=fseed, e=e, n=n, family="mm", phi=phi[:out["u"].shape[0]], phi_yes=float(np.median(phi[h == 1])))
+    out = _pack(f"forr_{'mmx' if masked else 'mm'}_n{n}", phi, np.stack([phi, h.astype(float), yn], 1), T_train, T_test)
+    out.update(fseed=fseed, e=e, n=n, family="mmx" if masked else "mm", phi=phi[:out["u"].shape[0]], phi_yes=float(np.median(phi[h == 1])))
     return out
 
 
@@ -282,6 +284,7 @@ def all_tasks(seed=0, quick=False):
         ts += [forrelation_stream(18, "kloosterman", **kw), forrelation_stream(20, "kloosterman", **kw)]
         ts += [forrelation_random_stream(n, **kw) for n in (10, 12, 14, 16, 18, 20)]
         ts += [forrelation_mm_stream(n, **kw) for n in (10, 12, 14, 16)]
+        ts += [forrelation_mm_stream(n, masked=True, **kw) for n in (10, 12, 14, 16)]
         from .forrelation import drift_stream
         ts += [drift_stream(12, **kw), drift_stream(16, **kw)]
     return {t["name"]: t for t in ts}
@@ -296,6 +299,9 @@ def get_task(name, seed=0, quick=False):
     m = re.match(r"forr_mm_n(\d+)$", name)
     if m:
         return forrelation_mm_stream(int(m.group(1)), seed=seed)
+    m = re.match(r"forr_mmx_n(\d+)$", name)
+    if m:
+        return forrelation_mm_stream(int(m.group(1)), seed=seed, masked=True)
     m = re.match(r"forr_(kloos|gold)_n(\d+)$", name)
     if m:
         return forrelation_stream(int(m.group(2)), "kloosterman" if m.group(1) == "kloos" else "gold", seed=seed)

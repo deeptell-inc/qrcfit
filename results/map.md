@@ -1,6 +1,6 @@
 # QRC vs tuned classical: map
 
-3411 cells, 57 quantum configs × 45 tasks, seeds per cell = 3–10.
+3451 cells, 57 quantum configs × 49 tasks, seeds per cell = 3–10.
 
 All win criteria are recomputed here from the raw curves, so definitions can be changed post hoc.
   q        : NMSE of the quantum reservoir with exact expectations (S = inf)
@@ -223,6 +223,10 @@ Colour = log10(q / cls) (left) and log10(q / eqW) (right); blue = quantum more a
 | forr_qrc | forr_mm_n12 | 1 | 0.00148 | 0.00156 | 0.00148 (forr_full:4096) | 0.991 (forr_anf2:222) | 1e+02 | ∞ | 1 | >1000 |  | y |  |  |
 | forr_qrc | forr_mm_n14 | 1 | 0.00148 | 0.00156 | 0.00148 (forr_full:16384) | 1.03 (forr_anf2:276) | 1e+02 | ∞ | 1 | >1000 |  | y |  |  |
 | forr_qrc | forr_mm_n16 | 1 | 0.00148 | 0.00156 | 0.00148 (forr_full:65536) | 1.03 (forr_anf2:338) | 1e+02 | ∞ | 1 | >1000 |  | y |  |  |
+| forr_qrc | forr_mmx_n10 | 1 | 0.00148 | 0.00156 | 0.00148 (forr_full:1024) | 0.908 (forr_anf2:176) | 1e+02 | ∞ | 1 | >1000 |  | y |  |  |
+| forr_qrc | forr_mmx_n12 | 1 | 0.00148 | 0.00156 | 0.00148 (forr_full:4096) | 0.95 (forr_anf2:222) | 1e+02 | ∞ | 1 | >1000 |  | y |  |  |
+| forr_qrc | forr_mmx_n14 | 1 | 0.00148 | 0.00156 | 0.00148 (forr_full:16384) | 1.01 (forr_anf2:276) | 1e+02 | ∞ | 1 | >1000 |  | y |  |  |
+| forr_qrc | forr_mmx_n16 | 1 | 0.00148 | 0.00156 | 0.00148 (forr_full:65536) | 1.03 (forr_anf2:338) | 1e+02 | ∞ | 1 | >1000 |  | y |  |  |
 | forr_qrc | forr_rand_n10 | 1 | 0.00117 | 0.00118 | 0.00117 (forr_full:1024) | 0.96 (forr_anf2:176) | 1e+02 | ∞ | 1 | >1000 |  | y |  |  |
 | forr_qrc | forr_rand_n12 | 1 | 0.000964 | 0.000993 | 0.000964 (forr_full:4096) | 1.01 (forr_anf2:222) | 1e+02 | ∞ | 1 | >1000 |  | y |  |  |
 | forr_qrc | forr_rand_n14 | 1 | 0.000829 | 0.000924 | 0.000829 (forr_full:16384) | 1.01 (forr_anf2:276) | 1e+02 | — | 1 | >1000 |  | y |  |  |
@@ -1031,9 +1035,9 @@ Colour = log10(q / cls) (left) and log10(q / eqW) (right); blue = quantum more a
 
 ## Wins by axis
 
-- **A: accuracy vs best classical (any size), all seeds:** 0/1011 cells
-- **a: accuracy vs equal-readout-cost classical, all seeds:** 42/1011 cells
-  - forr_qrc: forr_kloos_n10, forr_kloos_n12, forr_kloos_n14, forr_kloos_n16, forr_kloos_n18, forr_kloos_n20, forr_mm_n10, forr_mm_n12, forr_mm_n14, forr_mm_n16, forr_rand_n10, forr_rand_n12, forr_rand_n14, forr_rand_n16, forr_rand_n18, forr_rand_n20
+- **A: accuracy vs best classical (any size), all seeds:** 0/1015 cells
+- **a: accuracy vs equal-readout-cost classical, all seeds:** 46/1015 cells
+  - forr_qrc: forr_kloos_n10, forr_kloos_n12, forr_kloos_n14, forr_kloos_n16, forr_kloos_n18, forr_kloos_n20, forr_mm_n10, forr_mm_n12, forr_mm_n14, forr_mm_n16, forr_mmx_n10, forr_mmx_n12, forr_mmx_n14, forr_mmx_n16, forr_rand_n10, forr_rand_n12, forr_rand_n14, forr_rand_n16, forr_rand_n18, forr_rand_n20
   - spin_hamenc_chain_N6_xyz_V5: lorenz_multi
   - spin_hamenc_rand_N6_xyz_V5: lorenz_multi
   - spin_reset_chain_N4_z: mc30, mc30_n5, narma20
@@ -1048,8 +1052,8 @@ Colour = log10(q / cls) (left) and log10(q / eqW) (right); blue = quantum more a
   - spin_reset_rand_N6_zz_weak0.3: mg10, mg10_small
   - spin_reset_rand_N6_zz_weak0.6: mg10, mg10_small
   - spin_reset_rand_N8_z: mc30, mc30_n5, narma10, narma10_n5
-- **★ scale win:** 0/1011 cells
-- **◆ both (A and S*_cls × W ≤ 3e5):** 0/1011 cells
+- **★ scale win:** 0/1015 cells
+- **◆ both (A and S*_cls × W ≤ 3e5):** 0/1015 cells
 
 ## Best quantum config per task (median over seeds)
 
@@ -1071,6 +1075,10 @@ Colour = log10(q / cls) (left) and log10(q / eqW) (right); blue = quantum more a
 | forr_mm_n12 | forr_qrc (1) | 0.00148 | 0.00148 (forr_full:4096) | 1 | 0.991 | 0.0015 |
 | forr_mm_n14 | forr_qrc (1) | 0.00148 | 0.00148 (forr_full:16384) | 1 | 1.03 | 0.0014 |
 | forr_mm_n16 | forr_qrc (1) | 0.00148 | 0.00148 (forr_full:65536) | 1 | 1.03 | 0.0014 |
+| forr_mmx_n10 | forr_qrc (1) | 0.00148 | 0.00148 (forr_full:1024) | 1 | 0.908 | 0.0016 |
+| forr_mmx_n12 | forr_qrc (1) | 0.00148 | 0.00148 (forr_full:4096) | 1 | 0.95 | 0.0016 |
+| forr_mmx_n14 | forr_qrc (1) | 0.00148 | 0.00148 (forr_full:16384) | 1 | 1.01 | 0.0015 |
+| forr_mmx_n16 | forr_qrc (1) | 0.00148 | 0.00148 (forr_full:65536) | 1 | 1.03 | 0.0014 |
 | forr_rand_n10 | forr_qrc (1) | 0.00117 | 0.00117 (forr_full:1024) | 1 | 0.96 | 0.0012 |
 | forr_rand_n12 | forr_qrc (1) | 0.000964 | 0.000964 (forr_full:4096) | 1 | 1.01 | 0.00095 |
 | forr_rand_n14 | forr_qrc (1) | 0.000829 | 0.000829 (forr_full:16384) | 1 | 1.01 | 0.00082 |

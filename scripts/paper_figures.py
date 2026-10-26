@@ -102,7 +102,7 @@ note("n_cells", len(rows), "results/map.jsonl (line count)")
 note("n_configs", len(configs), "results/map.jsonl")
 note("n_tasks", len(tasks), "results/map.jsonl")
 note("n_pairs_total", len(agg), "results/map.md 'Wins by axis' denominator")
-note("seeds_per_cell", dict(classical_input=min(a["n"] for k, a in agg.items() if k[1] in cls_tasks), oracle=min(a["n"] for k, a in agg.items() if k[1] in orc_tasks) if orc_tasks else None), "results/map.jsonl")
+note("seeds_per_cell", dict(classical_input_min=min(a["n"] for k, a in agg.items() if k[1] in cls_tasks), classical_input_max=max(a["n"] for k, a in agg.items() if k[1] in cls_tasks), classical_input_pairs_with_10=sum(a["n"] >= 10 for k, a in agg.items() if k[1] in cls_tasks), oracle=min(a["n"] for k, a in agg.items() if k[1] in orc_tasks) if orc_tasks else None), "results/map.jsonl")
 note("n_pairs_classical_input", len(cls_pairs), "results/map.jsonl (config,task) pairs excluding forr_/drift_ tasks")
 note("n_configs_classical_input", len({c for c, _ in cls_pairs}), "results/map.jsonl")
 note("n_tasks_classical_input", len(cls_tasks), "results/map.jsonl")
@@ -111,7 +111,7 @@ note("A_wins", sum(a["A"] for a in agg.values()), "results/map.md 'Wins by axis'
 note("a_wins", sum(a["a"] for a in agg.values()), "results/map.md 'Wins by axis'")
 note("a_wins_classical_input", sum(agg[k]["a"] for k in cls_pairs), "results/map.jsonl")
 note("star_wins", sum(a["scale"] for a in agg.values()), "★ restricted to classical-input tasks (manuscript-REVIEW.md fix 3)")
-note("star_wins_generic_rule", sum(a["scale_generic"] for a in agg.values()), "results/map.md 'Wins by axis' (make_report.py generic rule, counts the 6 oracle cells)")
+note("star_wins_generic_rule", sum(a["scale_generic"] for a in agg.values()), "generic make_report.py rule applied to all tasks (counts the oracle cells, where a/eqW/M* are undefined; the manuscript reports ★ = 0)")
 note("star_cells_generic_rule", sorted(f"{c}|{t}" for (c, t), a in agg.items() if a["scale_generic"]), "results/map.md")
 note("both_wins", sum(a["both"] for a in agg.values()), "results/map.md 'Wins by axis'")
 rat = [np.log10(agg[k]["q"] / agg[k]["cls"]) for k in cls_pairs]
@@ -243,7 +243,7 @@ if HAVE_FORR:
         ax2.plot(S, med, "-o", ms=3, color=FAM_COL[f], label=f)
         ax2.plot(S, p90, ":", color=FAM_COL[f], lw=0.8)
         fam_stats[f] = dict(n_pairs=len(cv), median_ratio_1e4=round(float(med[2]), 2), p90_ratio_1e4=round(float(p90[2]), 1), max_ratio_1e4=round(float(cv[:, 2].max()), 1),
-                            median_ratio_1e5=round(float(med[3]), 2), p90_ratio_1e5=round(float(p90[3]), 1))
+                            median_ratio_1e5=round(float(med[3]), 2), p90_ratio_1e5=round(float(p90[3]), 1), max_ratio_1e5=round(float(cv[:, 3].max()), 1))
     ax2.axvline(1e4, color="k", lw=0.6, ls="--"); ax2.axvline(1e5, color="k", lw=0.6, ls="--")
     ax2.text(1.1e4, 2e2, "$3{\\times}10^5$ shot-ops,\n$W{=}30$", fontsize=6); ax2.text(1.1e5, 2e2, "$W{=}1$", fontsize=6)
     ax2.set_xscale("log"); ax2.set_yscale("log"); ax2.set_ylim(0.8, 1e3)
@@ -397,7 +397,14 @@ if HAVE_FORR:
         for N_, q in zip(Ns, qi):
             if not np.isfinite(q):
                 ax.annotate("", xy=(N_, 3.5e4), xytext=(N_, 2e4), arrowprops=dict(arrowstyle="->", color=FC[fam][0], lw=0.8))
-    Nn = np.array([1e3, 2e6]); ax.plot(Nn, 2 * np.sqrt(100 * Nn / (1 - 0.8 ** 2)), "k--", lw=0.7, label="$2\\sqrt{mN/(1-\\Phi^2)}$, $m{=}100$, $\\Phi{=}0.8$")
+    Nn = np.logspace(3, 6.3, 50); v = (1 - 0.8 ** 2) / 100
+    ax.plot(Nn, (2 / v) * (1 + np.sqrt(1 + Nn * v)), "k--", lw=0.7, label="$4/Q+4N/Q^2=(1-\\Phi^2)/m$, $m{=}100$, $\\Phi{=}0.8$")
+    slopes = {}
+    for fam, pts in qstar.items():
+        pp = [(1 << n, q) for n, _, q in pts if np.isfinite(q)]
+        if len(pp) >= 2:
+            slopes[fam] = dict(n_points=len(pp), exponent=round(float(np.polyfit(np.log10([x for x, _ in pp]), np.log10([y for _, y in pp]), 1)[0]), 2))
+    note("query_crossover_exponent", slopes, "log-log slope of the interpolated Q* against N (paper/numbers.json query_crossover_by_family)")
     ax.set_xscale("log"); ax.set_yscale("log"); ax.set_xlim(5e2, 2e6); ax.set_ylim(1e2, 5e4)
     ax.set_xlabel("$N=2^n$"); ax.set_ylabel("classical queries matching\nquantum at 200 queries")
     ax.legend(frameon=False, loc="lower right", handletextpad=0.2, borderpad=0.2, fontsize=5)
@@ -418,7 +425,7 @@ if HAVE_FORR:
         for r in [r for r in rows if r["config"] == "forr_qrc" and r["task"] == t]:
             s = r["seed"]; b = base[f"{t}|{s}"]
             for m in (1e2, 1e3):
-                rivals = [v["nmse"] for k, v in b.items() if k.startswith("forr_") and not k.startswith("forr_wb") and v["size"] <= 20 * m]
+                rivals = [v["nmse"] for k, v in b.items() if k.startswith("forr_") and not k.startswith(("forr_wb", "forr_full", "forr_knownf")) and v["size"] <= 20 * m]  # black-box rivals only (same predicate as review_numbers.per_seed_query_comparison)
                 if rivals and min(rivals) <= r["curve"][f"{m:.0e}"]:
                     win = False
         plus[t] = win
@@ -525,6 +532,11 @@ for k in aw:
 rev["a_wins_S_eq_distribution"] = dict(Sd)
 rev["a_wins_q_gt_0.5"] = int(sum(agg[k]["q"] > 0.5 for k in aw)); rev["a_wins_ratio_lt_1.1"] = int(sum(agg[k]["eqW"] / agg[k]["q"] < 1.1 for k in aw))
 # (iii) task counts
+rev["ten_seed_cells"] = sorted(f"{c}|{t}" for (c, t), a in agg.items() if a["n"] >= 10 and t in cls_tasks)
+rev["three_seed_a_wins_reversed_at_ten_seeds"] = sorted(f"{c}|{t}" for (c, t), ds in cells.items() if t in cls_tasks and len(ds) >= 10 and all(d["a"] for d in ds[:3]) and not all(d["a"] for d in ds))
+rev["three_seed_a_wins_surviving_at_ten_seeds"] = sorted(f"{c}|{t}" for (c, t), ds in cells.items() if t in cls_tasks and len(ds) >= 10 and all(d["a"] for d in ds))
+rev["a_wins_M_star_worst_seed_max"] = max(max((d["M"] if np.isfinite(d["M"]) else 1000) for d in cells[k]) for k in aw)
+rev["online_weak_a_wins_M_star"] = {f"{c}|{t}": dict(median=(None if np.isinf(agg[(c, t)]["M"]) else agg[(c, t)]["M"]), worst=max((d["M"] if np.isfinite(d["M"]) else 1000) for d in cells[(c, t)])) for (c, t) in aw if "weak" in c}
 rev["task_counts"] = dict(classical_time_series=len([t for t in cls_tasks if not t.startswith("qin")]), quantum_input=len([t for t in cls_tasks if t.startswith("qin")]), oracle=len(orc_tasks))
 # (iv) tuned Kerr: IQR width / median and per-seed wins of tuned quantum over tuned semiclassical
 tk = {}
@@ -627,7 +639,7 @@ for (c, t), a in agg.items():
     ds = cells[(c, t)]
     qb = float(np.median([q_at(d["curve"], Sc) for d in ds]))
     a["q_budget_charged"] = qb; a["S_charged"] = Sc
-    f = family(c); charged[f].append(qb / a["q"])
+    f = family(c); charged[f].append(float(np.median([q_at(d["curve"], Sc) / d["q"] for d in ds])))  # same statistic as shot_degradation_by_family
     if a["q"] < 1e-2:
         charged_acc[f].append(qb / a["q"])
     fam_budget.setdefault(f, set()).add(Sc)

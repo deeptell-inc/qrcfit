@@ -1,6 +1,6 @@
 # Wave 4: Forrelation oracle-input tasks — matched query budgets
 
-quantum(m) = NMSE with m shots/step (2m queries). classical(Q) = naive / pairs (implemented √N-query all-pairs estimator) at Q queries; anf2 = degree-2 ANF attack at its own query count. All with the same tuned readout. Medians over 3 seeds; ✚ = query win in every seed (quantum at 2m queries beats every classical with ≤ 20m queries).
+quantum(m) = NMSE with m shots/step (2m queries). classical(Q) = naive / pairs (implemented √N-query all-pairs estimator) at Q queries; anf2 = degree-2 ANF attack at its own query count. All with the same tuned readout. Medians over the seeds listed per row; ✚ = query win in every seed (quantum at 2m queries beats every classical with ≤ 20m queries).
 
 | task | N | Φ_YES | seeds | quantum m=1e2 [IQR] / 1e3 / 1e4 / ∞ | classical Q=200 naive/pairs | Q=2000 naive/pairs | Q=20000 naive/pairs [IQR] | anf2 (Q) or white-box Q=200/2000/20000 | full-info (Q=N, same readout) | ✚ |
 |---|---|---|---|---|---|---|---|---|---|---|
@@ -18,6 +18,10 @@ quantum(m) = NMSE with m shots/step (2m queries). classical(Q) = naive / pairs (
 | forr_mm_n12 | 4096 | 1.0000 | 10 | 0.00263 [0.00214–0.00283] / 0.0017 / 0.0016 / 0.00148 | 1.01 / 0.414 | 0.703 / 0.00763 | 0.243 / 0.00194 [0.0014–0.00227] | 0.991 (222) | 0.00148 |  |
 | forr_mm_n14 | 16384 | 1.0000 | 10 | 0.00263 [0.00214–0.00283] / 0.0017 / 0.0016 / 0.00148 | 1.03 / 0.713 | 0.969 / 0.0173 | 0.516 / 0.00282 [0.00213–0.00323] | 1.03 (276) | 0.00148 |  |
 | forr_mm_n16 | 65536 | 1.0000 | 10 | 0.00263 [0.00214–0.00283] / 0.0017 / 0.0016 / 0.00148 | 1.03 / 0.893 | 0.999 / 0.0772 | 0.825 / 0.00497 [0.00321–0.00543] | 1.03 (338) | 0.00148 | ✚ |
+| forr_mmx_n10 | 1024 | 1.0000 | 10 | 0.00263 [0.00214–0.00283] / 0.0017 / 0.0016 / 0.00148 | 0.935 / 0.134 | 0.403 / 0.00531 | 0.0528 / 0.00183 [0.00132–0.00218] | 0.908 (176) | 0.00148 |  |
+| forr_mmx_n12 | 4096 | 1.0000 | 10 | 0.00263 [0.00214–0.00283] / 0.0017 / 0.0016 / 0.00148 | 1.03 / 0.407 | 0.732 / 0.00744 | 0.249 / 0.00199 [0.00138–0.0024] | 0.95 (222) | 0.00148 |  |
+| forr_mmx_n14 | 16384 | 1.0000 | 10 | 0.00263 [0.00214–0.00283] / 0.0017 / 0.0016 / 0.00148 | 1.04 / 0.695 | 0.979 / 0.0178 | 0.568 / 0.00264 [0.00197–0.003] | 1.01 (276) | 0.00148 | ✚ |
+| forr_mmx_n16 | 65536 | 1.0000 | 10 | 0.00263 [0.00214–0.00283] / 0.0017 / 0.0016 / 0.00148 | 1.03 / 0.915 | 1.02 / 0.0714 | 0.83 / 0.00443 [0.00314–0.00535] | 1.03 (338) | 0.00148 | ✚ |
 | forr_rand_n10 | 1024 | 0.7988 | 10 | 0.0109 [0.0101–0.0141] / 0.00492 / 0.00159 / 0.00117 | 0.931 / 0.24 | 0.568 / 0.0072 | 0.0978 / 0.00218 [0.00176–0.00247] | 0.96 (176) | 0.00117 |  |
 | forr_rand_n12 | 4096 | 0.7971 | 10 | 0.0107 [0.01–0.0143] / 0.00469 / 0.00148 / 0.000964 | 0.992 / 0.515 | 0.862 / 0.00995 | 0.352 / 0.00214 [0.00182–0.00238] | 1.01 (222) | 0.000964 |  |
 | forr_rand_n14 | 16384 | 0.7978 | 10 | 0.011 [0.00975–0.0125] / 0.00436 / 0.00132 / 0.000829 | 1.02 / 0.806 | 0.972 / 0.0249 | 0.697 / 0.00276 [0.00199–0.0032] | 1.01 (276) | 0.000829 |  |
@@ -27,4 +31,4 @@ quantum(m) = NMSE with m shots/step (2m queries). classical(Q) = naive / pairs (
 | drift_kloos_n12 | 4096 | 0.8490 | 10 | 0.227 [0.172–0.256] / 0.0488 / 0.0122 / 0.00604 | 1.03 / 0.966 | 1 / 0.201 | 0.895 / 0.0199 [0.0161–0.0233] | wb 0.104 / 0.0226 / 0.00842 | 0.00604 |  |
 | drift_kloos_n16 | 65536 | 0.8490 | 10 | 0.227 [0.169–0.252] / 0.0481 / 0.00709 / 0.000406 | 1.02 / 1.01 | 1.03 / 0.652 | 1.02 / 0.0538 [0.0398–0.0558] | wb 0.0995 / 0.0167 / 0.00234 | 0.000406 |  |
 
-Query wins: 6/22 tasks — forr_kloos_n18, forr_kloos_n20, forr_mm_n16, forr_rand_n16, forr_rand_n18, forr_rand_n20
+Query wins: 8/26 tasks — forr_kloos_n18, forr_kloos_n20, forr_mm_n16, forr_mmx_n14, forr_mmx_n16, forr_rand_n16, forr_rand_n18, forr_rand_n20

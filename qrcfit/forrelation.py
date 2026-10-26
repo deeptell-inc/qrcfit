@@ -161,11 +161,56 @@ def mm_pair(n, seed):
     return f, g
 
 
+def random_gl2(n, rng):
+    """Uniformly random invertible n x n matrix over F2 (rows as ints) and its inverse."""
+    while True:
+        A = rng.integers(0, 1 << n, n)
+        inv = _gf2_inverse(A, n)
+        if inv is not None:
+            return A, inv
+
+
+def _gf2_inverse(rows, n):
+    M = [int(r) | (1 << (n + i)) for i, r in enumerate(rows)]  # [A | I] augmented, bit i = column i
+    for col in range(n):
+        piv = next((r for r in range(col, n) if (M[r] >> col) & 1), None)
+        if piv is None:
+            return None
+        M[col], M[piv] = M[piv], M[col]
+        for r in range(n):
+            if r != col and (M[r] >> col) & 1:
+                M[r] ^= M[col]
+    return np.array([m >> n for m in M], dtype=np.int64)
+
+
+def apply_gl2(A, z):
+    """(A z) for all z in an int array: bit i of the result is parity(A_row_i & z)."""
+    out = np.zeros_like(z)
+    for i, row in enumerate(A):
+        out |= _parity(z & int(row)) << i
+    return out
+
+
+def transpose_gl2(A, n):
+    return np.array([sum(((int(A[i]) >> j) & 1) << i for i in range(n)) for j in range(n)], dtype=np.int64)
+
+
+def masked_pair(f, g, n, rng):
+    """Girish–Servedio affine masking: (f o A, g o A^{-T}) for a fresh random A in GL_n(F2); Phi is invariant
+    (bqp project, phi_comp_mulVec). Hides the Maiorana–McFarland block structure from the classical side."""
+    A, Ainv = random_gl2(n, rng)
+    AinvT = transpose_gl2(Ainv, n)
+    z = np.arange(1 << n)
+    return f[apply_gl2(A, z)], g[apply_gl2(AinvT, z)]
+
+
 def fresh_pair(task, t):
     """(f_t, g_t) tables of a fresh-pair task step, regenerated from the per-step seed (no persistence)."""
     N = 1 << task["n"]
-    if task.get("family") == "mm":
+    if task.get("family") in ("mm", "mmx"):
         f, g = mm_pair(task["n"], int(task["fseed"][t]))
+        if task["family"] == "mmx":
+            f, g = masked_pair(f, g, task["n"], np.random.default_rng(int(task["fseed"][t]) ^ 0x5A5A))
     else:
         f = 1.0 - 2.0 * np.random.default_rng(int(task["fseed"][t])).integers(0, 2, N)
         g = np.where(fwht(f) >= 0, 1.0, -1.0)
