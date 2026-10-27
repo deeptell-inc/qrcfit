@@ -148,7 +148,7 @@ def short(c):
 
 
 if HAVE_FORR:
-    fig = plt.figure(figsize=(DOUBLE, 8.6))
+    fig = plt.figure(figsize=(DOUBLE, 8.3))
     gs = fig.add_gridspec(2, 2, height_ratios=[1.0, 5.2], hspace=0.08, wspace=0.55, left=0.17, right=0.985, top=0.985, bottom=0.075)
     ax0 = fig.add_subplot(gs[0, :]); ax0.axis("off")
 
